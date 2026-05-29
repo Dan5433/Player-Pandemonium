@@ -1,3 +1,5 @@
+package me.abtu;
+
 import processing.core.PApplet;
 import processing.core.PFont;
 
@@ -10,9 +12,10 @@ public final class Main extends PApplet {
         fullScreen(P2D);
     }
 
-    //fonts
-    PFont pixelbit, jersey;
+    // fonts
+    public PFont pixelbit, jersey;
 
+    
     public void setup() {
         rectMode(CORNERS);
         loadFonts();
