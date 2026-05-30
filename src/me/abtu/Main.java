@@ -33,7 +33,7 @@ public final class Main extends PApplet {
     public void draw() {
         background(255);
 
-        scenes[0].draw(this);
+        image(scenes[0].getGraphics(this), 0, 0);
     }
 
     private void loadFonts() {

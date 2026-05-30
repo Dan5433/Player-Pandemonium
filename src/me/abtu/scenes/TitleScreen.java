@@ -2,21 +2,28 @@ package me.abtu.scenes;
 
 import me.abtu.Main;
 import processing.core.PConstants;
+import processing.core.PGraphics;
 
 public class TitleScreen extends Scene {
     @Override
-    public void draw(Main main) {
-        main.background(255);
-        main.fill(0);
+    public PGraphics getGraphics(Main main) {
+        PGraphics graphics = main.createGraphics(main.width, main.height);
+        graphics.beginDraw();
+
+        graphics.background(255);
+        graphics.fill(0);
 
 
-        main.textFont(main.jersey);
-        main.textAlign(PConstants.CENTER, PConstants.CENTER);
+        graphics.textFont(main.jersey);
+        graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
 
-        main.textSize(120);
-        main.text("Player Pandemonium", main.width / 2f, main.height / 4f);
+        graphics.textSize(120);
+        graphics.text("Player Pandemonium", graphics.width / 2f, graphics.height / 4f);
 
-        main.textSize(32);
-        main.text("Press Enter to Start", main.width / 2f, main.height / 2f);
+        graphics.textSize(32);
+        graphics.text("Press Enter to Start", graphics.width / 2f, graphics.height / 2f);
+
+        graphics.endDraw();
+        return graphics;
     }
 }
