@@ -10,6 +10,11 @@ public abstract class GraphicsBuffer {
     public static final int REFERENCE_WIDTH = 640;
     public static final int REFERENCE_HEIGHT = 360;
 
+    public static final int HALF_WIDTH = REFERENCE_WIDTH / 2;
+    public static final int HALF_HEIGHT = REFERENCE_HEIGHT / 2;
+    public static final int QUARTER_HEIGHT = REFERENCE_HEIGHT / 4;
+
+
     protected int resizeMode;
 
     public GraphicsBuffer(int resizeMode) {

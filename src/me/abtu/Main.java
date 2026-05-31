@@ -40,7 +40,7 @@ public final class Main extends PApplet {
     }
 
     private void loadFonts() {
-        pixelbit = createFont("fonts/Pixelbit.ttf", 15, false);
+        pixelbit = createFont("fonts/Pixelbit.ttf", 16, false);
         jersey = createFont("fonts/jersey10/Jersey10-Regular.ttf", 20, false);
     }
 
