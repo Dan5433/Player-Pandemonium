@@ -18,15 +18,16 @@ public class TitleScreen extends GraphicsBuffer {
 
 
         final int titleSize = 65;
-        final int buttonSize = 20;
+        final int buttonSize = 15;
 
-        graphics.textFont(main.jersey);
+        graphics.textFont(main.getTitleFont());
         graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
 
         graphics.textSize(titleSize);
         graphics.text("Player Pandemonium", graphics.width / 2f, graphics.height / 4f);
 
         graphics.textSize(buttonSize);
+        graphics.textFont(main.getDefaultFont());
         graphics.text("Press Enter to Start", graphics.width / 2f, graphics.height / 2f);
     }
 }

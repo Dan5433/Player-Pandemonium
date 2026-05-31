@@ -17,7 +17,7 @@ public final class Main extends PApplet {
     }
 
     // fonts
-    public PFont pixelbit, jersey;
+    private PFont pixelbit, jersey;
 
     private PImage ui;
 
@@ -40,7 +40,15 @@ public final class Main extends PApplet {
     }
 
     private void loadFonts() {
-        pixelbit = createFont("fonts/Pixelbit.ttf", 32, false);
-        jersey = createFont("fonts/jersey10/Jersey10-Regular.ttf", 32, false);
+        pixelbit = createFont("fonts/Pixelbit.ttf", 15, false);
+        jersey = createFont("fonts/jersey10/Jersey10-Regular.ttf", 20, false);
+    }
+
+    public PFont getTitleFont() {
+        return jersey;
+    }
+
+    public PFont getDefaultFont() {
+        return pixelbit;
     }
 }
