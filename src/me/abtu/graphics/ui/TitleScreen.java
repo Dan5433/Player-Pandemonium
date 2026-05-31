@@ -2,21 +2,28 @@ package me.abtu.graphics.ui;
 
 import me.abtu.Main;
 import me.abtu.config.AppConfig;
+import me.abtu.graphics.Button;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
 public class TitleScreen extends GraphicsBuffer {
+    protected final Button playButton;
 
-    public TitleScreen(int resizeMode) {
-        super(resizeMode);
+    public TitleScreen(Main main, int resizeMode) {
+        super(main, resizeMode);
+
+        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, 60, 10, PConstants.CENTER);
     }
 
     @Override
     protected void drawBuffer(Main main, PGraphics graphics) {
+        final float localMouseX = main.mouseX / scaleToScreenX;
+        final float localMouseY = main.mouseY / scaleToScreenY;
+        playButton.update(localMouseX, localMouseY, main.mousePressed);
+
         graphics.background(255);
         graphics.fill(0);
-
 
         final int titleSize = 65;
         final int buttonSize = 20;
@@ -29,9 +36,10 @@ public class TitleScreen extends GraphicsBuffer {
         graphics.textSize(titleSize);
         graphics.text("Player Pandemonium", HALF_WIDTH, QUARTER_HEIGHT);
 
-        graphics.textSize(buttonSize);
+//        graphics.textSize(buttonSize);
+//        graphics.text("Press Enter to Start", HALF_WIDTH, HALF_HEIGHT);
+        playButton.draw(graphics);
         graphics.textFont(main.getDefaultFont());
-        graphics.text("Press Enter to Start", HALF_WIDTH, HALF_HEIGHT);
 
         graphics.textSize(smallSize);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);
