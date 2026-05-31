@@ -1,11 +1,9 @@
 package me.abtu;
 
-import me.abtu.scenes.Scene;
-import me.abtu.scenes.TitleScreen;
+import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PGraphics;
-import processing.opengl.PGraphicsOpenGL;
+import processing.core.PImage;
 
 public final class Main extends PApplet {
     public static void main(String[] args) {
@@ -14,17 +12,17 @@ public final class Main extends PApplet {
 
     public void settings() {
         fullScreen(P2D);
+//        size(GraphicsBuffer.REFERENCE_WIDTH, GraphicsBuffer.REFERENCE_HEIGHT);
+        noSmooth();
     }
 
     // fonts
     public PFont pixelbit, jersey;
 
-    private PGraphics ui;
+    private PImage ui;
 
 
     public void setup() {
-        ((PGraphicsOpenGL) g).textureSampling(3); //force point texture sampling
-
         rectMode(CORNERS);
         loadFonts();
 
@@ -32,7 +30,7 @@ public final class Main extends PApplet {
     }
 
     private void initializeGraphics() {
-        ui = new TitleScreen().getGraphics(this);
+        ui = new TitleScreen(NEAREST_NEIGHBOR).getGraphicsImage(this);
     }
 
     public void draw() {
