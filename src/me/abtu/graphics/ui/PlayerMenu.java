@@ -8,7 +8,6 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class PlayerMenu extends GraphicsBuffer {
@@ -23,24 +22,24 @@ public class PlayerMenu extends GraphicsBuffer {
     public PlayerMenu(PApplet app, int resizeMode) {
         super(app, resizeMode);
 
-        players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E));
-        players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL));
+        players.add(Player.PLAYER_ONE);
+        players.add(Player.PLAYER_TWO);
 
         final int buttonSize = 20;
         final int buttonMargin = 10;
         addPlayerButton = new Button.Builder(HALF_WIDTH - buttonMargin - buttonSize / 2f, REFERENCE_HEIGHT - FIFTH_HEIGHT,
                 buttonSize, buttonSize, PConstants.CENTER, this::addPlayer)
                 .text("+")
-                .hoverExpand(2)
+                .hoverExpand(1)
                 .build();
 
         removePlayerButton = new Button.Builder(HALF_WIDTH + buttonMargin + buttonSize / 2f, REFERENCE_HEIGHT - FIFTH_HEIGHT,
                 buttonSize, buttonSize, PConstants.CENTER, this::removePlayer)
                 .text("-")
-                .hoverExpand(2)
+                .hoverExpand(1)
                 .build();
 
-        final int startButtonWidth = 64;
+        final int startButtonWidth = 80;
         final int startButtonHeight = 20;
         startGameButton = new Button.Builder(HALF_WIDTH, REFERENCE_HEIGHT - FIFTH_HEIGHT / 2f,
                 startButtonWidth, startButtonHeight, PConstants.CENTER, this::startGame)
@@ -53,7 +52,7 @@ public class PlayerMenu extends GraphicsBuffer {
         if (players.size() >= MAX_PLAYERS)
             return;
 
-        players.add(new Player(-1, -1, -1, -1, -1));
+        players.add(new Player());
     }
 
     private void removePlayer() {
@@ -107,11 +106,11 @@ public class PlayerMenu extends GraphicsBuffer {
 
             graphics.translate(-cardWidth / 2f, textLineSpacing);
             graphics.textAlign(PConstants.LEFT, PConstants.TOP);
-            graphics.text("Jump: " + KeyEvent.getKeyText(players.get(i).jump()), textMargin, textMargin);
-            graphics.text("Left: " + KeyEvent.getKeyText(players.get(i).left()), textMargin, textMargin + textLineSpacing);
-            graphics.text("Right: " + KeyEvent.getKeyText(players.get(i).right()), textMargin, textMargin + textLineSpacing * 2);
-            graphics.text("Primary: " + KeyEvent.getKeyText(players.get(i).primary()), textMargin, textMargin + textLineSpacing * 3);
-            graphics.text("Secondary: " + KeyEvent.getKeyText(players.get(i).secondary()), textMargin, textMargin + textLineSpacing * 4);
+            graphics.text("Left: " + players.get(i).getLeftKeyText(), textMargin, textMargin + textLineSpacing);
+            graphics.text("Right: " + players.get(i).getRightKeyText(), textMargin, textMargin + textLineSpacing * 2);
+            graphics.text("Jump: " + players.get(i).getJumpKeyText(), textMargin, textMargin);
+            graphics.text("Primary: " + players.get(i).getPrimaryKeyText(), textMargin, textMargin + textLineSpacing * 3);
+            graphics.text("Secondary: " + players.get(i).getSecondaryKeyText(), textMargin, textMargin + textLineSpacing * 4);
 
             graphics.translate(-(cardX - cardWidth / 2f), -(HALF_HEIGHT - cardHeight / 2f + textLineSpacing));
 
