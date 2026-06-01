@@ -13,7 +13,9 @@ public class TitleScreen extends GraphicsBuffer {
     public TitleScreen(Main main, int resizeMode) {
         super(main, resizeMode);
 
-        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, 60, 10, PConstants.CENTER);
+        final float width = REFERENCE_WIDTH / 4f;
+        final float height = REFERENCE_HEIGHT / 12f;
+        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, "Play");
     }
 
     @Override
@@ -26,8 +28,8 @@ public class TitleScreen extends GraphicsBuffer {
         graphics.fill(0);
 
         final int titleSize = 65;
-        final int buttonSize = 20;
-        final int smallSize = 16;
+        final int buttonTextSize = 32;
+        final int smallTextSize = 16;
         final int padding = 2;
 
         graphics.textFont(main.getTitleFont());
@@ -36,16 +38,15 @@ public class TitleScreen extends GraphicsBuffer {
         graphics.textSize(titleSize);
         graphics.text("Player Pandemonium", HALF_WIDTH, QUARTER_HEIGHT);
 
-//        graphics.textSize(buttonSize);
-//        graphics.text("Press Enter to Start", HALF_WIDTH, HALF_HEIGHT);
-        playButton.draw(graphics);
         graphics.textFont(main.getDefaultFont());
+        graphics.textSize(buttonTextSize);
+        playButton.draw(graphics);
 
-        graphics.textSize(smallSize);
+        graphics.textSize(smallTextSize);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);
-        graphics.text(AppConfig.VERSION, padding, graphics.height);
+        graphics.text(AppConfig.VERSION, padding, graphics.height - padding);
 
         graphics.textAlign(PConstants.RIGHT, PConstants.BOTTOM);
-        graphics.text(AppConfig.COPYRIGHT, graphics.width - padding, graphics.height);
+        graphics.text(AppConfig.COPYRIGHT, graphics.width - padding, graphics.height - padding);
     }
 }
