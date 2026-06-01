@@ -1,9 +1,9 @@
 package me.abtu;
 
+import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PImage;
 
 public final class Main extends PApplet {
     public static void main(String[] args) {
@@ -19,24 +19,23 @@ public final class Main extends PApplet {
     // fonts
     private PFont pixelbit, jersey;
 
-    private PImage ui;
+    private GraphicsBuffer ui;
 
 
     public void setup() {
-        rectMode(CORNERS);
         loadFonts();
 
         initializeGraphics();
     }
 
     private void initializeGraphics() {
-        ui = new TitleScreen(NEAREST_NEIGHBOR).getGraphicsImage(this);
+        ui = new TitleScreen(this, NEAREST_NEIGHBOR);
     }
 
     public void draw() {
         background(255);
 
-        image(ui, 0, 0);
+        image(ui.getGraphicsImage(this), 0, 0);
     }
 
     private void loadFonts() {
