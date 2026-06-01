@@ -20,31 +20,36 @@ public class Button {
     protected int hoverColor = 220;
     protected int pressedColor = 200;
 
-    public Button(float x, float y, float width, float height, int drawMode, String text) {
+    protected Runnable callback;
+
+    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.drawMode = drawMode;
+        this.callback = callback;
         this.text = text;
     }
 
-    public Button(float x, float y, float width, float height, int drawMode, String text, int textColor) {
+    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.drawMode = drawMode;
+        this.callback = callback;
         this.text = text;
         this.textColor = textColor;
     }
 
-    public Button(float x, float y, float width, float height, int drawMode, String text, int textColor, int normalColor, int hoverColor, int pressedColor) {
+    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor, int normalColor, int hoverColor, int pressedColor) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.drawMode = drawMode;
+        this.callback = callback;
         this.text = text;
         this.textColor = textColor;
         this.normalColor = normalColor;
@@ -52,12 +57,13 @@ public class Button {
         this.pressedColor = pressedColor;
     }
 
-    public Button(float x, float y, float width, float height, int drawMode, String text, int textColor, int normalColor, int hoverColor, int pressedColor, int strokeColor, float strokeWeight) {
+    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor, int normalColor, int hoverColor, int pressedColor, int strokeColor, float strokeWeight) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.drawMode = drawMode;
+        this.callback = callback;
         this.text = text;
         this.textColor = textColor;
         this.normalColor = normalColor;
@@ -101,8 +107,12 @@ public class Button {
         if (isMouseInside(mouseX, mouseY)) {
             if (mousePressed)
                 state = State.PRESSED;
-            else
+            else {
+                if (state == State.PRESSED)
+                    onPress();
+
                 state = State.HOVERED;
+            }
         } else
             state = State.NORMAL;
     }
@@ -126,7 +136,11 @@ public class Button {
         return false;
     }
 
-    public enum State {
+    protected void onPress() {
+        callback.run();
+    }
+
+    protected enum State {
         NORMAL,
         HOVERED,
         PRESSED

@@ -9,13 +9,18 @@ import processing.core.PGraphics;
 
 public class TitleScreen extends GraphicsBuffer {
     protected final Button playButton;
+    private int bg = 255;
 
     public TitleScreen(Main main, int resizeMode) {
         super(main, resizeMode);
 
         final float width = REFERENCE_WIDTH / 4f;
         final float height = REFERENCE_HEIGHT / 12f;
-        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, "Play");
+        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, this::play, "Play");
+    }
+
+    public void play() {
+        bg--;
     }
 
     @Override
@@ -24,7 +29,7 @@ public class TitleScreen extends GraphicsBuffer {
         final float localMouseY = main.mouseY / scaleToScreenY;
         playButton.update(localMouseX, localMouseY, main.mousePressed);
 
-        graphics.background(255);
+        graphics.background(bg);
         graphics.fill(0);
 
         final int titleSize = 65;
