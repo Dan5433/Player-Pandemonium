@@ -36,6 +36,9 @@ public abstract class GraphicsBuffer {
     }
 
     public PImage getGraphicsImage(Main main) {
+        final float localMouseX = main.mouseX / scaleToScreenX;
+        final float localMouseY = main.mouseY / scaleToScreenY;
+
         PGraphics graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT);
 
         graphics.beginDraw();
@@ -43,7 +46,7 @@ public abstract class GraphicsBuffer {
         graphics.fill(255);
         graphics.stroke(0);
 
-        drawBuffer(main, graphics);
+        drawBuffer(main, graphics, localMouseX, localMouseY);
         graphics.endDraw();
 
         PImage image = graphics.get();
@@ -52,5 +55,5 @@ public abstract class GraphicsBuffer {
         return image;
     }
 
-    protected abstract void drawBuffer(Main main, PGraphics graphics);
+    protected abstract void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY);
 }

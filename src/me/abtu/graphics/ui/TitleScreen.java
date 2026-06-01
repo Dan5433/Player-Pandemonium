@@ -22,10 +22,8 @@ public class TitleScreen extends GraphicsBuffer {
     }
 
     @Override
-    protected void drawBuffer(Main main, PGraphics graphics) {
-        final float localMouseX = main.mouseX / scaleToScreenX;
-        final float localMouseY = main.mouseY / scaleToScreenY;
-        playButton.update(localMouseX, localMouseY, main.mousePressed);
+    protected void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY) {
+        playButton.update(mouseX, mouseY, main.mousePressed);
 
         final int padding = 2;
         graphics.fill(0);
