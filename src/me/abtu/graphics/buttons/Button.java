@@ -18,6 +18,8 @@ public class Button {
     protected final int hoverColor;
     protected final int pressedColor;
 
+    protected final int hoverExpand;
+
 
     protected State state = State.NORMAL;
 
@@ -36,6 +38,7 @@ public class Button {
         this.normalColor = builder.normalColor;
         this.hoverColor = builder.hoverColor;
         this.pressedColor = builder.pressedColor;
+        this.hoverExpand = builder.hoverExpand;
     }
 
 
@@ -55,7 +58,10 @@ public class Button {
         graphics.strokeWeight(strokeWeight);
 
         graphics.rectMode(drawMode);
-        graphics.rect(x, y, width, height);
+        if (state == State.NORMAL)
+            graphics.rect(x, y, width, height);
+        else
+            graphics.rect(x, y, width + hoverExpand * 2, height + hoverExpand * 2);
 
         graphics.fill(textColor);
         switch (drawMode) {
@@ -89,12 +95,12 @@ public class Button {
                 if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height)
                     return true;
             }
-            case PConstants.RADIUS -> {
-                if (mouseX > x - width && mouseX < x + width && mouseY > y - height && mouseY < y + height)
-                    return true;
-            }
             case PConstants.CENTER -> {
-                if (mouseX > x - width / 2f && mouseX < x + width / 2f && mouseY > y - height / 2f && mouseY < y + height / 2f)
+                if (state == State.NORMAL) {
+                    if (mouseX > x - width / 2f && mouseX < x + width / 2f && mouseY > y - height / 2f && mouseY < y + height / 2f)
+                        return true;
+                } else if (mouseX > x - width / 2f - hoverExpand && mouseX < x + width / 2f + hoverExpand
+                        && mouseY > y - height / 2f - hoverExpand && mouseY < y + height / 2f + hoverExpand)
                     return true;
             }
             default -> throw new IllegalStateException("Unexpected draw mode: " + drawMode);
@@ -127,6 +133,8 @@ public class Button {
         private int hoverColor = 220;
         private int pressedColor = 200;
 
+        protected int hoverExpand;
+
 
         public Builder(float x, float y, float width, float height, int drawMode, Runnable pressCallback) {
             this.x = x;
@@ -157,6 +165,11 @@ public class Button {
         public Builder buttonStroke(int strokeColor, float strokeWeight) {
             this.strokeColor = strokeColor;
             this.strokeWeight = strokeWeight;
+            return this;
+        }
+
+        public Builder hoverExpand(int hoverExpand) {
+            this.hoverExpand = hoverExpand;
             return this;
         }
 

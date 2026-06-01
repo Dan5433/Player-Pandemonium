@@ -18,6 +18,7 @@ public class TitleScreen extends GraphicsBuffer {
         final float height = REFERENCE_HEIGHT / 12f;
         playButton = new Button.Builder(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, this::play)
                 .text("Play")
+                .hoverExpand(2)
                 .build();
     }
 
