@@ -1,77 +1,43 @@
-package me.abtu.graphics;
+package me.abtu.graphics.buttons;
 
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
 public class Button {
-    protected final float x, y;
+    protected final float x, y, width, height;
     protected final int drawMode;
+    protected final Runnable callback;
+
+    protected final String text;
+    protected final int textColor;
+
+    protected final int strokeColor;
+    protected final float strokeWeight;
+
+    protected final int normalColor;
+    protected final int hoverColor;
+    protected final int pressedColor;
+
 
     protected State state = State.NORMAL;
-    protected float width, height;
 
-    protected String text;
-    protected int textColor = 0;
 
-    protected int strokeColor = 0;
-    protected float strokeWeight = 1f;
-
-    protected int normalColor = 255;
-    protected int hoverColor = 220;
-    protected int pressedColor = 200;
-
-    protected Runnable callback;
-
-    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.drawMode = drawMode;
-        this.callback = callback;
-        this.text = text;
+    private Button(Builder builder) {
+        this.x = builder.x;
+        this.y = builder.y;
+        this.width = builder.width;
+        this.height = builder.height;
+        this.drawMode = builder.drawMode;
+        this.callback = builder.pressCallback;
+        this.text = builder.text;
+        this.textColor = builder.textColor;
+        this.strokeColor = builder.strokeColor;
+        this.strokeWeight = builder.strokeWeight;
+        this.normalColor = builder.normalColor;
+        this.hoverColor = builder.hoverColor;
+        this.pressedColor = builder.pressedColor;
     }
 
-    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.drawMode = drawMode;
-        this.callback = callback;
-        this.text = text;
-        this.textColor = textColor;
-    }
-
-    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor, int normalColor, int hoverColor, int pressedColor) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.drawMode = drawMode;
-        this.callback = callback;
-        this.text = text;
-        this.textColor = textColor;
-        this.normalColor = normalColor;
-        this.hoverColor = hoverColor;
-        this.pressedColor = pressedColor;
-    }
-
-    public Button(float x, float y, float width, float height, int drawMode, Runnable callback, String text, int textColor, int normalColor, int hoverColor, int pressedColor, int strokeColor, float strokeWeight) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.drawMode = drawMode;
-        this.callback = callback;
-        this.text = text;
-        this.textColor = textColor;
-        this.normalColor = normalColor;
-        this.hoverColor = hoverColor;
-        this.pressedColor = pressedColor;
-        this.strokeColor = strokeColor;
-        this.strokeWeight = strokeWeight;
-    }
 
     public void draw(PGraphics graphics) {
         final int previousFill = graphics.fillColor;
@@ -144,5 +110,58 @@ public class Button {
         NORMAL,
         HOVERED,
         PRESSED
+    }
+
+    public static class Builder {
+        private final float x, y, width, height;
+        private final int drawMode;
+        private final Runnable pressCallback;
+
+        private String text = "";
+        private int textColor = 0;
+
+        private int strokeColor = 0;
+        private float strokeWeight = 1f;
+
+        private int normalColor = 255;
+        private int hoverColor = 220;
+        private int pressedColor = 200;
+
+
+        public Builder(float x, float y, float width, float height, int drawMode, Runnable pressCallback) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.drawMode = drawMode;
+            this.pressCallback = pressCallback;
+        }
+
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public Builder textColor(int textColor) {
+            this.textColor = textColor;
+            return this;
+        }
+
+        public Builder buttonColors(int normalColor, int hoverColor, int pressedColor) {
+            this.normalColor = normalColor;
+            this.hoverColor = hoverColor;
+            this.pressedColor = pressedColor;
+            return this;
+        }
+
+        public Builder buttonStroke(int strokeColor, float strokeWeight) {
+            this.strokeColor = strokeColor;
+            this.strokeWeight = strokeWeight;
+            return this;
+        }
+
+        public Button build() {
+            return new Button(this);
+        }
     }
 }

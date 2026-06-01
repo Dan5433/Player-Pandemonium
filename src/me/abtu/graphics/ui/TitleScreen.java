@@ -2,8 +2,8 @@ package me.abtu.graphics.ui;
 
 import me.abtu.Main;
 import me.abtu.config.AppConfig;
-import me.abtu.graphics.Button;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.graphics.buttons.Button;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -16,7 +16,9 @@ public class TitleScreen extends GraphicsBuffer {
 
         final float width = REFERENCE_WIDTH / 4f;
         final float height = REFERENCE_HEIGHT / 12f;
-        playButton = new Button(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, this::play, "Play");
+        playButton = new Button.Builder(HALF_WIDTH, HALF_HEIGHT, width, height, PConstants.CENTER, this::play)
+                .text("Play")
+                .build();
     }
 
     public void play() {
