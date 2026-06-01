@@ -13,7 +13,11 @@ public abstract class GraphicsBuffer {
 
     public static final int HALF_WIDTH = REFERENCE_WIDTH / 2;
     public static final int HALF_HEIGHT = REFERENCE_HEIGHT / 2;
-    public static final int QUARTER_HEIGHT = REFERENCE_HEIGHT / 4;
+    public static final int FIFTH_HEIGHT = REFERENCE_HEIGHT / 5;
+
+    public static final int TITLE_SIZE = 65;
+    public static final int BUTTON_TEXT_SIZE = 32;
+    public static final int SMALL_TEXT_SIZE = 16;
 
     protected final float scaleToScreenX;
     protected final float scaleToScreenY;
@@ -35,6 +39,10 @@ public abstract class GraphicsBuffer {
         PGraphics graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT);
 
         graphics.beginDraw();
+        graphics.background(255);
+        graphics.fill(255);
+        graphics.stroke(0);
+
         drawBuffer(main, graphics);
         graphics.endDraw();
 
