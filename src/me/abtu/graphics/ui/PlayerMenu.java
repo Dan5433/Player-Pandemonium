@@ -4,11 +4,11 @@ import me.abtu.Main;
 import me.abtu.game.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
-import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class PlayerMenu extends GraphicsBuffer {
@@ -20,11 +20,19 @@ public class PlayerMenu extends GraphicsBuffer {
 
     private final Button addPlayerButton, removePlayerButton, startGameButton;
 
-    public PlayerMenu(PApplet app, int resizeMode) {
-        super(app, resizeMode);
+    private final Main main;
 
-        players.add(Player.PLAYER_ONE);
-        players.add(Player.PLAYER_TWO);
+    public PlayerMenu(Main main, int resizeMode) {
+        super(main, resizeMode);
+        this.main = main;
+
+        players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D,
+                KeyEvent.VK_Q, KeyEvent.VK_E, this::clearListeningButtons));
+        main.addKeyPressEventListener(players.getFirst()::listenForKeybind);
+
+        players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
+                KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, this::clearListeningButtons));
+        main.addKeyPressEventListener(players.get(1)::listenForKeybind);
 
         final int buttonSize = 20;
         final int buttonMargin = 10;
@@ -49,21 +57,24 @@ public class PlayerMenu extends GraphicsBuffer {
                 .build();
     }
 
-    private void addPlayer() {
+    private void addPlayer(Button button) {
         if (players.size() >= MAX_PLAYERS)
             return;
 
-        players.add(new Player());
+        Player player = new Player(this::clearListeningButtons);
+        players.add(player);
+        main.addKeyPressEventListener(player::listenForKeybind);
     }
 
-    private void removePlayer() {
+    private void removePlayer(Button button) {
         if (players.size() <= MIN_PLAYERS)
             return;
 
-        players.removeLast();
+        Player player = players.removeLast();
+        main.removeKeyPressEventListener(player::listenForKeybind);
     }
 
-    private void startGame() {
+    private void startGame(Button button) {
         System.out.println("Start");
     }
 
@@ -159,5 +170,10 @@ public class PlayerMenu extends GraphicsBuffer {
         addPlayerButton.draw(graphics);
         removePlayerButton.draw(graphics);
         startGameButton.draw(graphics);
+    }
+
+    private void clearListeningButtons() {
+        for (Player player : players)
+            player.clearListeningButton();
     }
 }

@@ -1,7 +1,6 @@
 package me.abtu.graphics;
 
 import me.abtu.Main;
-import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -23,10 +22,10 @@ public abstract class GraphicsBuffer {
     protected final float scaleToScreenY;
     protected int resizeMode;
 
-    public GraphicsBuffer(PApplet app, int resizeMode) {
+    public GraphicsBuffer(Main main, int resizeMode) {
         this.resizeMode = resizeMode;
-        scaleToScreenX = app.width / (float) REFERENCE_WIDTH;
-        scaleToScreenY = app.height / (float) REFERENCE_HEIGHT;
+        scaleToScreenX = main.width / (float) REFERENCE_WIDTH;
+        scaleToScreenY = main.height / (float) REFERENCE_HEIGHT;
 
         if (scaleToScreenX % 1 != 0)
             System.out.println("Screen width is not of a common resolution!");

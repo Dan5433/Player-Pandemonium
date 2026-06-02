@@ -3,12 +3,13 @@ package me.abtu.graphics.buttons;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
+import java.util.function.Consumer;
+
 public class Button {
     protected final float x, y, width, height;
     protected final int drawMode;
-    protected final Runnable callback;
-
-    protected final String text;
+    protected final Consumer<Button> callback;
+    protected final String tag;
     protected final int textColor;
 
     protected final int strokeColor;
@@ -19,6 +20,7 @@ public class Button {
     protected final int pressedColor;
 
     protected final int hoverExpand;
+    protected String text;
 
 
     protected State state = State.NORMAL;
@@ -39,6 +41,7 @@ public class Button {
         this.hoverColor = builder.hoverColor;
         this.pressedColor = builder.pressedColor;
         this.hoverExpand = builder.hoverExpand;
+        this.tag = builder.tag;
     }
 
 
@@ -94,7 +97,11 @@ public class Button {
         state = State.HOVERED;
     }
 
-    public boolean isMouseInside(float mouseX, float mouseY) {
+    public void changeText(String text) {
+        this.text = text;
+    }
+
+    protected boolean isMouseInside(float mouseX, float mouseY) {
         switch (drawMode) {
             case PConstants.CORNER -> {
                 if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height)
@@ -117,7 +124,7 @@ public class Button {
         if (callback == null)
             return;
 
-        callback.run();
+        callback.accept(this);
     }
 
     protected enum State {
@@ -126,10 +133,14 @@ public class Button {
         PRESSED
     }
 
+    public String getTag() {
+        return tag;
+    }
+
     public static class Builder {
         private final float x, y, width, height;
         private final int drawMode;
-        private final Runnable pressCallback;
+        private final Consumer<Button> pressCallback;
 
         private String text = "";
         private int textColor = 0;
@@ -141,10 +152,12 @@ public class Button {
         private int hoverColor = 220;
         private int pressedColor = 200;
 
-        protected int hoverExpand;
+        private int hoverExpand;
+
+        private String tag;
 
 
-        public Builder(float x, float y, float width, float height, int drawMode, Runnable pressCallback) {
+        public Builder(float x, float y, float width, float height, int drawMode, Consumer<Button> pressCallback) {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -178,6 +191,11 @@ public class Button {
 
         public Builder hoverExpand(int hoverExpand) {
             this.hoverExpand = hoverExpand;
+            return this;
+        }
+
+        public Builder tag(String tag) {
+            this.tag = tag;
             return this;
         }
 
