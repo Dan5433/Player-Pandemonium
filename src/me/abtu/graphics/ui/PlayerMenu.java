@@ -7,6 +7,7 @@ import me.abtu.graphics.buttons.Button;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PVector;
 
 import java.util.ArrayList;
 
@@ -83,40 +84,80 @@ public class PlayerMenu extends GraphicsBuffer {
 
         graphics.fill(255);
         final float cardMargin = REFERENCE_WIDTH / 64f;
-        final float cardWidth = REFERENCE_WIDTH / 6.4f;
+        final float cardWidth = REFERENCE_WIDTH / 5f;
         final float cardHeight = REFERENCE_HEIGHT / 2.4f;
         int numPlayers = players.size();
         for (int i = 0; i < numPlayers; i++) {
+            Player player = players.get(i);
+
+            Button leftKeybindButton = player.getLeftKeybindButton();
+            Button rightKeybindButton = player.getRightKeybindButton();
+            Button jumpKeybindButton = player.getJumpKeybindButton();
+            Button primaryKeybindButton = player.getPrimaryKeybindButton();
+            Button secondaryKeybindButton = player.getSecondaryKeybindButton();
+
             float offset = i - (numPlayers - 1) / 2f;
             float cardX = HALF_WIDTH + offset * (cardWidth + cardMargin);
             graphics.fill(255);
             graphics.rect(cardX, HALF_HEIGHT, cardWidth, cardHeight);
 
 
+            PVector buttonTranslate = new PVector();
             graphics.translate(cardX, HALF_HEIGHT - cardHeight / 2f);
+            buttonTranslate.add(new PVector(cardX, HALF_HEIGHT - cardHeight / 2f));
 
-            graphics.fill(0);
-            graphics.textFont(main.getDefaultFont());
-            graphics.textSize(SMALL_TEXT_SIZE);
+            //draw player keybinds
+            {
+                graphics.fill(0);
+                graphics.textFont(main.getDefaultFont());
+                graphics.textSize(SMALL_TEXT_SIZE);
 
-            final float textMargin = 2;
-            final float textLineSpacing = 16;
-            graphics.textAlign(PConstants.CENTER, PConstants.TOP);
-            graphics.text("Player " + (i + 1), 0, textMargin);
+                final float textMargin = 6;
+                graphics.textAlign(PConstants.CENTER, PConstants.TOP);
+                graphics.text("Player " + (i + 1), 0, textMargin);
 
-            graphics.translate(-cardWidth / 2f, textLineSpacing);
-            graphics.textAlign(PConstants.LEFT, PConstants.TOP);
-            graphics.text("Left: " + players.get(i).getLeftKeyText(), textMargin, textMargin + textLineSpacing);
-            graphics.text("Right: " + players.get(i).getRightKeyText(), textMargin, textMargin + textLineSpacing * 2);
-            graphics.text("Jump: " + players.get(i).getJumpKeyText(), textMargin, textMargin);
-            graphics.text("Primary: " + players.get(i).getPrimaryKeyText(), textMargin, textMargin + textLineSpacing * 3);
-            graphics.text("Secondary: " + players.get(i).getSecondaryKeyText(), textMargin, textMargin + textLineSpacing * 4);
+                graphics.translate(-cardWidth / 2f, SMALL_TEXT_SIZE);
+                buttonTranslate.add(new PVector(-cardWidth / 2f, SMALL_TEXT_SIZE));
+                graphics.textAlign(PConstants.LEFT, PConstants.TOP);
 
-            graphics.translate(-(cardX - cardWidth / 2f), -(HALF_HEIGHT - cardHeight / 2f + textLineSpacing));
+                graphics.translate(textMargin, textMargin + SMALL_TEXT_SIZE);
+                buttonTranslate.add(new PVector(textMargin, textMargin + SMALL_TEXT_SIZE));
+                graphics.text("Left:", 0, 0);
+                leftKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
+                leftKeybindButton.draw(graphics);
 
-            addPlayerButton.draw(graphics);
-            removePlayerButton.draw(graphics);
-            startGameButton.draw(graphics);
+                graphics.translate(0, SMALL_TEXT_SIZE);
+                buttonTranslate.y += SMALL_TEXT_SIZE;
+                graphics.text("Right:", 0, 0);
+                rightKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
+                rightKeybindButton.draw(graphics);
+
+                graphics.translate(0, SMALL_TEXT_SIZE);
+                buttonTranslate.y += SMALL_TEXT_SIZE;
+                graphics.text("Jump:", 0, 0);
+                jumpKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
+                jumpKeybindButton.draw(graphics);
+
+                graphics.translate(0, SMALL_TEXT_SIZE);
+                buttonTranslate.y += SMALL_TEXT_SIZE;
+                graphics.text("Primary:", 0, 0);
+                primaryKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
+                primaryKeybindButton.draw(graphics);
+
+                graphics.translate(0, SMALL_TEXT_SIZE);
+                buttonTranslate.y += SMALL_TEXT_SIZE;
+                graphics.text("Secondary:", 0, 0);
+                secondaryKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
+                secondaryKeybindButton.draw(graphics);
+
+
+                graphics.translate(-textMargin, -(textMargin + SMALL_TEXT_SIZE * 5));
+                graphics.translate(-(cardX - cardWidth / 2f), -(HALF_HEIGHT - cardHeight / 2f + SMALL_TEXT_SIZE));
+            }
         }
+
+        addPlayerButton.draw(graphics);
+        removePlayerButton.draw(graphics);
+        startGameButton.draw(graphics);
     }
 }

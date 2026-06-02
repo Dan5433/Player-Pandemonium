@@ -46,6 +46,8 @@ public class Button {
         final int previousFill = graphics.fillColor;
         final int previousStroke = graphics.strokeColor;
         final float previousStrokeWeight = graphics.strokeWeight;
+        final int previousTextAlignX = graphics.textAlign;
+        final int previousTextAlignY = graphics.textAlignY;
 
         final int color = switch (state) {
             case NORMAL -> normalColor;
@@ -73,20 +75,23 @@ public class Button {
         graphics.fill(previousFill);
         graphics.stroke(previousStroke);
         graphics.strokeWeight(previousStrokeWeight);
+        graphics.textAlign(previousTextAlignX, previousTextAlignY);
     }
 
     public void update(float mouseX, float mouseY, boolean mousePressed) {
-        if (isMouseInside(mouseX, mouseY)) {
-            if (mousePressed)
-                state = State.PRESSED;
-            else {
-                if (state == State.PRESSED)
-                    onPress();
-
-                state = State.HOVERED;
-            }
-        } else
+        if (!isMouseInside(mouseX, mouseY)) {
             state = State.NORMAL;
+            return;
+        }
+
+        if (mousePressed) {
+            state = State.PRESSED;
+            return;
+        }
+
+        if (state == State.PRESSED)
+            onPress();
+        state = State.HOVERED;
     }
 
     public boolean isMouseInside(float mouseX, float mouseY) {
@@ -109,6 +114,9 @@ public class Button {
     }
 
     protected void onPress() {
+        if (callback == null)
+            return;
+
         callback.run();
     }
 
