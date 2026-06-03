@@ -2,9 +2,10 @@ package me.abtu.util;
 
 
 import com.jogamp.newt.event.KeyEvent;
+import org.jetbrains.annotations.NotNull;
 
 public final class NewtKeyEvent {
-    public static String getKeyCodeText(int keyCode) {
+    public static @NotNull String getKeyCodeText(int keyCode) {
         //match unset keybind
         if (keyCode == KeyEvent.VK_UNDEFINED)
             return "Unset";
@@ -57,6 +58,7 @@ public final class NewtKeyEvent {
             case KeyEvent.VK_SCROLL_LOCK -> "Scroll Lock";
             case KeyEvent.VK_CANCEL -> "Cancel";
             case KeyEvent.VK_INSERT -> "Insert";
+            case KeyEvent.VK_SPACE -> "Space";
 
             case KeyEvent.VK_SEPARATOR, KeyEvent.VK_DECIMAL -> "Numpad .";
             case KeyEvent.VK_ADD -> "Numpad +";

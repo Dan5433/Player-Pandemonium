@@ -49,6 +49,11 @@ public final class Main extends PApplet {
     }
 
     public void keyPressed(KeyEvent event) {
+        //prevent quitting via escape key
+        if (event.getKeyCode() == ESC)
+            key = 0;
+
+
         for (Consumer<KeyEvent> listener : keyPressEventListeners)
             listener.accept(event);
     }

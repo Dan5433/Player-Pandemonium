@@ -26,12 +26,12 @@ public class PlayerMenu extends GraphicsBuffer {
         super(main, resizeMode);
         this.main = main;
 
-        players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D,
-                KeyEvent.VK_Q, KeyEvent.VK_E, this::clearListeningButtons));
+        players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
+                this::clearListeningButtons, this::canBindKey));
         main.addKeyPressEventListener(players.getFirst().getKeybindEventListener());
 
-        players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-                KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, this::clearListeningButtons));
+        players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL,
+                this::clearListeningButtons, this::canBindKey));
         main.addKeyPressEventListener(players.get(1).getKeybindEventListener());
 
         final int buttonSize = 20;
@@ -61,7 +61,7 @@ public class PlayerMenu extends GraphicsBuffer {
         if (players.size() >= MAX_PLAYERS)
             return;
 
-        Player player = new Player(this::clearListeningButtons);
+        Player player = new Player(this::clearListeningButtons, this::canBindKey);
         players.add(player);
         main.addKeyPressEventListener(player.getKeybindEventListener());
     }
@@ -123,7 +123,7 @@ public class PlayerMenu extends GraphicsBuffer {
                 graphics.textFont(main.getDefaultFont());
                 graphics.textSize(SMALL_TEXT_SIZE);
 
-                final float textMargin = 6;
+                final float textMargin = 3;
                 graphics.textAlign(PConstants.CENTER, PConstants.TOP);
                 graphics.text("Player " + (i + 1), 0, textMargin);
 
@@ -175,5 +175,16 @@ public class PlayerMenu extends GraphicsBuffer {
     private void clearListeningButtons() {
         for (Player player : players)
             player.clearListeningButton();
+    }
+
+    private boolean canBindKey(int keyCode) {
+        for (Player player : players) {
+            int[] keybinds = player.getKeybinds();
+            for (int keybind : keybinds) {
+                if (keybind == keyCode)
+                    return false;
+            }
+        }
+        return true;
     }
 }

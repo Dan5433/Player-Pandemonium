@@ -15,5 +15,14 @@
     <orderEntry type="library" name="gluegen-rt-2.6.0" level="project" />
     <orderEntry type="library" name="core-4.5.2" level="project" />
     <orderEntry type="library" name="gluegen-rt-2.6.0-natives-linux-aarch64" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/26.0.2/annotations-26.0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

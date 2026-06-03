@@ -8,6 +8,7 @@ import me.abtu.util.NewtKeyEvent;
 import processing.core.PConstants;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Player {
     private static final String LEFT_KEY_TAG = "left";
@@ -16,22 +17,24 @@ public class Player {
     private static final String PRIMARY_KEY_TAG = "primary";
     private static final String SECONDARY_KEY_TAG = "secondary";
     private final Runnable onPressBindButton;
+    private final Function<Integer, Boolean> canBindKey;
 
     private final Button leftKeybindButton, rightKeybindButton, jumpKeybindButton, primaryKeybindButton, secondaryKeybindButton;
     private int left, right, jump, primary, secondary;
     private Button listeningKeybindButton;
     private final Consumer<processing.event.KeyEvent> keybindEventListener;
 
-    public Player(int jump, int left, int right, int primary, int secondary, Runnable onPressBindButton) {
+    public Player(int jump, int left, int right, int primary, int secondary, Runnable onPressBindButton, Function<Integer, Boolean> canBindKey) {
         this.left = left;
         this.right = right;
         this.jump = jump;
         this.primary = primary;
         this.secondary = secondary;
         this.onPressBindButton = onPressBindButton;
+        this.canBindKey = canBindKey;
 
         final int xOffset = 90;
-        final float buttonWidth = GraphicsBuffer.REFERENCE_WIDTH / 16f;
+        final float buttonWidth = GraphicsBuffer.REFERENCE_WIDTH / 10f;
         this.leftKeybindButton = new Button.Builder(xOffset, GraphicsBuffer.SMALL_TEXT_SIZE / 4f, buttonWidth, GraphicsBuffer.SMALL_TEXT_SIZE,
                 PConstants.CENTER, this::pressKeybindButton)
                 .text(getLeftKeyText())
@@ -61,8 +64,8 @@ public class Player {
         keybindEventListener = this::listenForKeybind;
     }
 
-    public Player(Runnable onPressBindButton) {
-        this(0, 0, 0, 0, 0, onPressBindButton);
+    public Player(Runnable onPressBindButton, Function<Integer, Boolean> canBindKey) {
+        this(0, 0, 0, 0, 0, onPressBindButton, canBindKey);
     }
 
     private void pressKeybindButton(Button button) {
@@ -86,7 +89,12 @@ public class Player {
         if (listeningKeybindButton == null)
             return;
 
+        if (!canBindKey.apply(event.getKeyCode()))
+            return;
+
         KeyEvent newtEvent = (KeyEvent) event.getNative();
+        if (newtEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
+            return;
 
         switch (listeningKeybindButton.getTag()) {
             case LEFT_KEY_TAG -> {
@@ -112,6 +120,10 @@ public class Player {
         }
 
         clearListeningButton();
+    }
+
+    public int[] getKeybinds() {
+        return new int[]{jump, left, right, primary, secondary};
     }
 
     public String getLeftKeyText() {
