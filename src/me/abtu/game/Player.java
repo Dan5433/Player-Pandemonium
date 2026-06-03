@@ -7,6 +7,8 @@ import me.abtu.graphics.buttons.Button;
 import me.abtu.util.NewtKeyEvent;
 import processing.core.PConstants;
 
+import java.util.function.Consumer;
+
 public class Player {
     private static final String LEFT_KEY_TAG = "left";
     private static final String RIGHT_KEY_TAG = "right";
@@ -18,6 +20,7 @@ public class Player {
     private final Button leftKeybindButton, rightKeybindButton, jumpKeybindButton, primaryKeybindButton, secondaryKeybindButton;
     private int left, right, jump, primary, secondary;
     private Button listeningKeybindButton;
+    private final Consumer<processing.event.KeyEvent> keybindEventListener;
 
     public Player(int jump, int left, int right, int primary, int secondary, Runnable onPressBindButton) {
         this.left = left;
@@ -54,6 +57,8 @@ public class Player {
                 .text(getSecondaryKeyText())
                 .tag(SECONDARY_KEY_TAG)
                 .build();
+
+        keybindEventListener = this::listenForKeybind;
     }
 
     public Player(Runnable onPressBindButton) {
@@ -77,7 +82,7 @@ public class Player {
         listeningKeybindButton = button;
     }
 
-    public void listenForKeybind(processing.event.KeyEvent event) {
+    private void listenForKeybind(processing.event.KeyEvent event) {
         if (listeningKeybindButton == null)
             return;
 
@@ -168,5 +173,9 @@ public class Player {
             case PRIMARY_KEY_TAG -> primaryKeybindButton.changeText(getPrimaryKeyText());
             case SECONDARY_KEY_TAG -> secondaryKeybindButton.changeText(getSecondaryKeyText());
         }
+    }
+
+    public Consumer<processing.event.KeyEvent> getKeybindEventListener() {
+        return keybindEventListener;
     }
 }

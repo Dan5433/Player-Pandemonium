@@ -28,11 +28,11 @@ public class PlayerMenu extends GraphicsBuffer {
 
         players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D,
                 KeyEvent.VK_Q, KeyEvent.VK_E, this::clearListeningButtons));
-        main.addKeyPressEventListener(players.getFirst()::listenForKeybind);
+        main.addKeyPressEventListener(players.getFirst().getKeybindEventListener());
 
         players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
                 KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL, this::clearListeningButtons));
-        main.addKeyPressEventListener(players.get(1)::listenForKeybind);
+        main.addKeyPressEventListener(players.get(1).getKeybindEventListener());
 
         final int buttonSize = 20;
         final int buttonMargin = 10;
@@ -63,7 +63,7 @@ public class PlayerMenu extends GraphicsBuffer {
 
         Player player = new Player(this::clearListeningButtons);
         players.add(player);
-        main.addKeyPressEventListener(player::listenForKeybind);
+        main.addKeyPressEventListener(player.getKeybindEventListener());
     }
 
     private void removePlayer(Button button) {
@@ -71,7 +71,7 @@ public class PlayerMenu extends GraphicsBuffer {
             return;
 
         Player player = players.removeLast();
-        main.removeKeyPressEventListener(player::listenForKeybind);
+        main.removeKeyPressEventListener(player.getKeybindEventListener());
     }
 
     private void startGame(Button button) {
