@@ -1,5 +1,6 @@
 package me.abtu.graphics.ui;
 
+import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
 import me.abtu.game.Player;
 import me.abtu.graphics.GraphicsBuffer;
@@ -8,7 +9,6 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class PlayerMenu extends GraphicsBuffer {

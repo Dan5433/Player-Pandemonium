@@ -1,11 +1,11 @@
 package me.abtu.game;
 
 
+import com.jogamp.newt.event.KeyEvent;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.util.NewtKeyEvent;
 import processing.core.PConstants;
-
-import java.awt.event.KeyEvent;
 
 public class Player {
     private static final String LEFT_KEY_TAG = "left";
@@ -57,12 +57,10 @@ public class Player {
     }
 
     public Player(Runnable onPressBindButton) {
-        this(-1, -1, -1, -1, -1, onPressBindButton);
+        this(0, 0, 0, 0, 0, onPressBindButton);
     }
 
     private void pressKeybindButton(Button button) {
-        onPressBindButton.run();
-
         if (listeningKeybindButton != null) {
             updateListeningButtonText();
         }
@@ -73,6 +71,8 @@ public class Player {
             return;
         }
 
+        onPressBindButton.run();
+
         button.changeText("...");
         listeningKeybindButton = button;
     }
@@ -81,25 +81,27 @@ public class Player {
         if (listeningKeybindButton == null)
             return;
 
+        KeyEvent newtEvent = (KeyEvent) event.getNative();
+
         switch (listeningKeybindButton.getTag()) {
             case LEFT_KEY_TAG -> {
-                left = event.getKeyCode();
+                left = newtEvent.getKeyCode();
                 leftKeybindButton.changeText(getLeftKeyText());
             }
             case RIGHT_KEY_TAG -> {
-                right = event.getKeyCode();
+                right = newtEvent.getKeyCode();
                 rightKeybindButton.changeText(getRightKeyText());
             }
             case JUMP_KEY_TAG -> {
-                jump = event.getKeyCode();
+                jump = newtEvent.getKeyCode();
                 jumpKeybindButton.changeText(getJumpKeyText());
             }
             case PRIMARY_KEY_TAG -> {
-                primary = event.getKeyCode();
+                primary = newtEvent.getKeyCode();
                 primaryKeybindButton.changeText(getPrimaryKeyText());
             }
             case SECONDARY_KEY_TAG -> {
-                secondary = event.getKeyCode();
+                secondary = newtEvent.getKeyCode();
                 secondaryKeybindButton.changeText(getSecondaryKeyText());
             }
         }
@@ -108,23 +110,26 @@ public class Player {
     }
 
     public String getLeftKeyText() {
-        return left != -1 ? KeyEvent.getKeyText(left) : "Unset";
+        return NewtKeyEvent.getKeyCodeText(left);
     }
 
     public String getRightKeyText() {
-        return right != -1 ? KeyEvent.getKeyText(right) : "Unset";
+        if (right == -1)
+            return "Unset";
+
+        return NewtKeyEvent.getKeyCodeText(right);
     }
 
     public String getJumpKeyText() {
-        return jump != -1 ? KeyEvent.getKeyText(jump) : "Unset";
+        return NewtKeyEvent.getKeyCodeText(jump);
     }
 
     public String getPrimaryKeyText() {
-        return primary != -1 ? KeyEvent.getKeyText(primary) : "Unset";
+        return NewtKeyEvent.getKeyCodeText(primary);
     }
 
     public String getSecondaryKeyText() {
-        return secondary != -1 ? KeyEvent.getKeyText(secondary) : "Unset";
+        return NewtKeyEvent.getKeyCodeText(secondary);
     }
 
     public Button getLeftKeybindButton() {

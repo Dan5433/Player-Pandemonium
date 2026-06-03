@@ -66,6 +66,7 @@ public final class Main extends PApplet {
         return pixelbit;
     }
 
+    @SuppressWarnings("unused")
     public void pressPlayButton(Button button) {
         ui = new PlayerMenu(this, NEAREST_NEIGHBOR);
     }
