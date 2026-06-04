@@ -210,8 +210,8 @@ public class PlayerMenu extends GraphicsBuffer {
             PlayerCard playerCard = playerCards.get(i);
 
             Player player = new Player(playerCard.getKeybinds());
-            main.addKeyPressEventListener(player::keyPressed);
-            main.addKeyReleaseEventListener(player::keyReleased);
+            main.addKeyPressEventListener(player.getKeyPressListener());
+            main.addKeyReleaseEventListener(player.getKeyReleaseListener());
             players[i] = player;
         }
         return players;
