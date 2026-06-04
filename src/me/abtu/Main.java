@@ -3,10 +3,12 @@ package me.abtu;
 import me.abtu.game.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.graphics.game.GameArena;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
 import processing.event.KeyEvent;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ public final class Main extends PApplet {
     private PFont pixelbit, jersey;
 
     //graphics
-    private GraphicsBuffer ui;
+    private GraphicsBuffer ui, moving;
+    private PImage arena;
 
     //events
     private final ArrayList<Consumer<KeyEvent>> keyPressEventListeners = new ArrayList<>();
@@ -49,7 +52,15 @@ public final class Main extends PApplet {
     public void draw() {
         background(255);
 
-        image(ui.getGraphicsImage(this), 0, 0);
+        //draw graphics
+        if (arena != null)
+            image(arena, 0, 0);
+
+        if (moving != null)
+            image(moving.getGraphicsImage(this), 0, 0);
+
+        if (ui != null)
+            image(ui.getGraphicsImage(this), 0, 0);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -71,7 +82,9 @@ public final class Main extends PApplet {
     public void startGame(Button button) {
         PlayerMenu playerMenu = (PlayerMenu) ui;
         players = playerMenu.getPlayers();
-        System.out.println("Starting game...");
+
+        ui = null;
+        arena = new GameArena(this, NEAREST_NEIGHBOR).getGraphicsImage(this);
     }
 
     public void addKeyPressEventListener(Consumer<KeyEvent> listener) {
