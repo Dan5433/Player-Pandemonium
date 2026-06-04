@@ -27,11 +27,11 @@ public class PlayerMenu extends GraphicsBuffer {
         this.main = main;
 
         players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
-                this::clearListeningButtons, this::canBindKey));
+                this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
         main.addKeyPressEventListener(players.getFirst().getKeybindEventListener());
 
         players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL,
-                this::clearListeningButtons, this::canBindKey));
+                this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
         main.addKeyPressEventListener(players.get(1).getKeybindEventListener());
 
         final int buttonSize = 20;
@@ -61,7 +61,9 @@ public class PlayerMenu extends GraphicsBuffer {
         if (players.size() >= MAX_PLAYERS)
             return;
 
-        Player player = new Player(this::clearListeningButtons, this::canBindKey);
+        startGameButton.disable();
+
+        Player player = new Player(this::clearListeningButtons, this::canBindKey, this::updateStartButtonState);
         players.add(player);
         main.addKeyPressEventListener(player.getKeybindEventListener());
     }
@@ -72,6 +74,8 @@ public class PlayerMenu extends GraphicsBuffer {
 
         Player player = players.removeLast();
         main.removeKeyPressEventListener(player.getKeybindEventListener());
+
+        updateStartButtonState();
     }
 
     private void startGame(Button button) {
@@ -170,6 +174,19 @@ public class PlayerMenu extends GraphicsBuffer {
         addPlayerButton.draw(graphics);
         removePlayerButton.draw(graphics);
         startGameButton.draw(graphics);
+    }
+
+    private void updateStartButtonState() {
+        for (Player player : players) {
+            for (int keybind : player.getKeybinds()) {
+                if (keybind == 0) {
+                    startGameButton.disable();
+                    return;
+                }
+            }
+        }
+
+        startGameButton.enable();
     }
 
     private void clearListeningButtons() {

@@ -18,6 +18,7 @@ public class Button {
     protected final int normalColor;
     protected final int hoverColor;
     protected final int pressedColor;
+    protected final int disabledColor;
 
     protected final int hoverExpand;
     protected String text;
@@ -42,6 +43,7 @@ public class Button {
         this.pressedColor = builder.pressedColor;
         this.hoverExpand = builder.hoverExpand;
         this.tag = builder.tag;
+        this.disabledColor = builder.disabledColor;
     }
 
 
@@ -56,6 +58,7 @@ public class Button {
             case NORMAL -> normalColor;
             case HOVERED -> hoverColor;
             case PRESSED -> pressedColor;
+            case DISABLED -> disabledColor;
         };
         graphics.fill(color);
 
@@ -63,7 +66,7 @@ public class Button {
         graphics.strokeWeight(strokeWeight);
 
         graphics.rectMode(drawMode);
-        if (state == State.NORMAL)
+        if (state == State.NORMAL || state == State.DISABLED)
             graphics.rect(x, y, width, height);
         else
             graphics.rect(x, y, width + hoverExpand * 2, height + hoverExpand * 2);
@@ -82,6 +85,9 @@ public class Button {
     }
 
     public void update(float mouseX, float mouseY, boolean mousePressed) {
+        if (state == State.DISABLED)
+            return;
+
         if (!isMouseInside(mouseX, mouseY)) {
             state = State.NORMAL;
             return;
@@ -127,14 +133,23 @@ public class Button {
         callback.accept(this);
     }
 
-    protected enum State {
-        NORMAL,
-        HOVERED,
-        PRESSED
+    public void disable() {
+        state = State.DISABLED;
     }
 
     public String getTag() {
         return tag;
+    }
+
+    public void enable() {
+        state = State.NORMAL;
+    }
+
+    protected enum State {
+        NORMAL,
+        HOVERED,
+        PRESSED,
+        DISABLED
     }
 
     public static class Builder {
@@ -151,6 +166,7 @@ public class Button {
         private int normalColor = 255;
         private int hoverColor = 220;
         private int pressedColor = 200;
+        private int disabledColor = 125;
 
         private int hoverExpand;
 
@@ -176,10 +192,11 @@ public class Button {
             return this;
         }
 
-        public Builder buttonColors(int normalColor, int hoverColor, int pressedColor) {
+        public Builder buttonColors(int normalColor, int hoverColor, int pressedColor, int disabledColor) {
             this.normalColor = normalColor;
             this.hoverColor = hoverColor;
             this.pressedColor = pressedColor;
+            this.disabledColor = disabledColor;
             return this;
         }
 

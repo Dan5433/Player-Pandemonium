@@ -16,7 +16,7 @@ public class Player {
     private static final String JUMP_KEY_TAG = "jump";
     private static final String PRIMARY_KEY_TAG = "primary";
     private static final String SECONDARY_KEY_TAG = "secondary";
-    private final Runnable onPressBindButton;
+    private final Runnable onPressBindButton, onKeybindListenEvent;
     private final Function<Integer, Boolean> canBindKey;
 
     private final Button leftKeybindButton, rightKeybindButton, jumpKeybindButton, primaryKeybindButton, secondaryKeybindButton;
@@ -24,7 +24,7 @@ public class Player {
     private Button listeningKeybindButton;
     private final Consumer<processing.event.KeyEvent> keybindEventListener;
 
-    public Player(int jump, int left, int right, int primary, int secondary, Runnable onPressBindButton, Function<Integer, Boolean> canBindKey) {
+    public Player(int jump, int left, int right, int primary, int secondary, Runnable onPressBindButton, Function<Integer, Boolean> canBindKey, Runnable onKeybindListenEvent) {
         this.left = left;
         this.right = right;
         this.jump = jump;
@@ -32,6 +32,7 @@ public class Player {
         this.secondary = secondary;
         this.onPressBindButton = onPressBindButton;
         this.canBindKey = canBindKey;
+        this.onKeybindListenEvent = onKeybindListenEvent;
 
         final int xOffset = 90;
         final float buttonWidth = GraphicsBuffer.REFERENCE_WIDTH / 10f;
@@ -64,8 +65,8 @@ public class Player {
         keybindEventListener = this::listenForKeybind;
     }
 
-    public Player(Runnable onPressBindButton, Function<Integer, Boolean> canBindKey) {
-        this(0, 0, 0, 0, 0, onPressBindButton, canBindKey);
+    public Player(Runnable onPressBindButton, Function<Integer, Boolean> canBindKey, Runnable onKeybindListenEvent) {
+        this(0, 0, 0, 0, 0, onPressBindButton, canBindKey, onKeybindListenEvent);
     }
 
     private void pressKeybindButton(Button button) {
@@ -120,6 +121,7 @@ public class Player {
         }
 
         clearListeningButton();
+        onKeybindListenEvent.run();
     }
 
     public int[] getKeybinds() {
