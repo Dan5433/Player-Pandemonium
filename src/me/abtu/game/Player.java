@@ -90,32 +90,30 @@ public class Player {
         if (listeningKeybindButton == null)
             return;
 
-        if (!canBindKey.apply(event.getKeyCode()))
-            return;
-
         KeyEvent newtEvent = (KeyEvent) event.getNative();
-        if (newtEvent.getKeyCode() == KeyEvent.VK_ESCAPE)
+        int keyCode = newtEvent.getKeyCode();
+        if (!canBindKey.apply(keyCode))
             return;
 
         switch (listeningKeybindButton.getTag()) {
             case LEFT_KEY_TAG -> {
-                left = newtEvent.getKeyCode();
+                left = keyCode;
                 leftKeybindButton.changeText(getLeftKeyText());
             }
             case RIGHT_KEY_TAG -> {
-                right = newtEvent.getKeyCode();
+                right = keyCode;
                 rightKeybindButton.changeText(getRightKeyText());
             }
             case JUMP_KEY_TAG -> {
-                jump = newtEvent.getKeyCode();
+                jump = keyCode;
                 jumpKeybindButton.changeText(getJumpKeyText());
             }
             case PRIMARY_KEY_TAG -> {
-                primary = newtEvent.getKeyCode();
+                primary = keyCode;
                 primaryKeybindButton.changeText(getPrimaryKeyText());
             }
             case SECONDARY_KEY_TAG -> {
-                secondary = newtEvent.getKeyCode();
+                secondary = keyCode;
                 secondaryKeybindButton.changeText(getSecondaryKeyText());
             }
         }

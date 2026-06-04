@@ -195,6 +195,9 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private boolean canBindKey(int keyCode) {
+        if (keyCode == KeyEvent.VK_ESCAPE)
+            return false;
+
         for (Player player : players) {
             int[] keybinds = player.getKeybinds();
             for (int keybind : keybinds) {
