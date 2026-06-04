@@ -1,5 +1,6 @@
 package me.abtu;
 
+import me.abtu.game.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
 import me.abtu.graphics.ui.PlayerMenu;
@@ -31,6 +32,9 @@ public final class Main extends PApplet {
     //events
     private final ArrayList<Consumer<KeyEvent>> keyPressEventListeners = new ArrayList<>();
 
+    //gameplay
+    private Player[] players;
+
 
     public void setup() {
         loadFonts();
@@ -58,6 +62,26 @@ public final class Main extends PApplet {
             listener.accept(event);
     }
 
+    @SuppressWarnings("unused")
+    public void openPlayerMenu(Button button) {
+        ui = new PlayerMenu(this, NEAREST_NEIGHBOR);
+    }
+
+    @SuppressWarnings("unused")
+    public void startGame(Button button) {
+        PlayerMenu playerMenu = (PlayerMenu) ui;
+        players = playerMenu.getPlayers();
+        System.out.println("Starting game...");
+    }
+
+    public void addKeyPressEventListener(Consumer<KeyEvent> listener) {
+        keyPressEventListeners.add(listener);
+    }
+
+    public void removeKeyPressEventListener(Consumer<KeyEvent> listener) {
+        keyPressEventListeners.remove(listener);
+    }
+
     private void loadFonts() {
         pixelbit = createFont("fonts/Pixelbit.ttf", 16, false);
         jersey = createFont("fonts/jersey10/Jersey10-Regular.ttf", 20, false);
@@ -69,18 +93,5 @@ public final class Main extends PApplet {
 
     public PFont getDefaultFont() {
         return pixelbit;
-    }
-
-    @SuppressWarnings("unused")
-    public void pressPlayButton(Button button) {
-        ui = new PlayerMenu(this, NEAREST_NEIGHBOR);
-    }
-
-    public void addKeyPressEventListener(Consumer<KeyEvent> listener) {
-        keyPressEventListeners.add(listener);
-    }
-
-    public void removeKeyPressEventListener(Consumer<KeyEvent> listener) {
-        keyPressEventListeners.remove(listener);
     }
 }

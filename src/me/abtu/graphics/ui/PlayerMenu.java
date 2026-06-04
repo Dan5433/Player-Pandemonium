@@ -51,7 +51,7 @@ public class PlayerMenu extends GraphicsBuffer {
         final int startButtonWidth = 80;
         final int startButtonHeight = 20;
         startGameButton = new Button.Builder(HALF_WIDTH, REFERENCE_HEIGHT - FIFTH_HEIGHT / 2f,
-                startButtonWidth, startButtonHeight, PConstants.CENTER, this::startGame)
+                startButtonWidth, startButtonHeight, PConstants.CENTER, main::startGame)
                 .text("Start Game")
                 .hoverExpand(2)
                 .build();
@@ -76,10 +76,6 @@ public class PlayerMenu extends GraphicsBuffer {
         main.removeKeyPressEventListener(player.getKeybindEventListener());
 
         updateStartButtonState();
-    }
-
-    private void startGame(Button button) {
-        System.out.println("Start");
     }
 
     @Override
@@ -206,5 +202,9 @@ public class PlayerMenu extends GraphicsBuffer {
             }
         }
         return true;
+    }
+
+    public Player[] getPlayers() {
+        return players.toArray(new Player[0]);
     }
 }
