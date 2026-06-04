@@ -20,7 +20,7 @@ public class PlayerCard {
     private final Function<Integer, Boolean> canBindKey;
 
     private final Button leftKeybindButton, rightKeybindButton, jumpKeybindButton, primaryKeybindButton, secondaryKeybindButton;
-    private final Consumer<processing.event.KeyEvent> keybindEventListener;
+    private final Consumer<KeyEvent> keybindEventListener;
     private int left, right, jump, primary, secondary;
     private Button listeningKeybindButton;
 
@@ -86,12 +86,11 @@ public class PlayerCard {
         listeningKeybindButton = button;
     }
 
-    private void listenForKeybind(processing.event.KeyEvent event) {
+    private void listenForKeybind(KeyEvent event) {
         if (listeningKeybindButton == null)
             return;
 
-        KeyEvent newtEvent = (KeyEvent) event.getNative();
-        int keyCode = newtEvent.getKeyCode();
+        int keyCode = event.getKeyCode();
         if (!canBindKey.apply(keyCode))
             return;
 
@@ -123,7 +122,7 @@ public class PlayerCard {
     }
 
     public int[] getKeybinds() {
-        return new int[]{jump, left, right, primary, secondary};
+        return new int[]{left, right, jump, primary, secondary};
     }
 
     public String getLeftKeyText() {
@@ -187,7 +186,7 @@ public class PlayerCard {
         }
     }
 
-    public Consumer<processing.event.KeyEvent> getKeybindEventListener() {
+    public Consumer<KeyEvent> getKeybindEventListener() {
         return keybindEventListener;
     }
 }

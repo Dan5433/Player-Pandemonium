@@ -204,11 +204,15 @@ public class PlayerMenu extends GraphicsBuffer {
         return true;
     }
 
-    public Player[] getPlayers() {
+    public Player[] getPlayers(Main main) {
         Player[] players = new Player[playerCards.size()];
         for (int i = 0; i < playerCards.size(); i++) {
             PlayerCard playerCard = playerCards.get(i);
-            players[i] = new Player(playerCard.getKeybinds());
+
+            Player player = new Player(playerCard.getKeybinds());
+            main.addKeyPressEventListener(player::keyPressed);
+            main.addKeyReleaseEventListener(player::keyReleased);
+            players[i] = player;
         }
         return players;
     }
