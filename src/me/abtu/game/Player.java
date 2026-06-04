@@ -11,14 +11,16 @@ import java.util.function.Consumer;
 
 
 public class Player {
-    protected static final float MAX_SPEED = 10;
-    protected static final float ACCELERATION = 0.5f;
-    protected static final float FRICTION = 0.1f;
+    protected static final float MAX_SPEED = 3.5f;
+    protected static final float ACCELERATION = 0.2f;
+    protected static final float FRICTION = 0.15f;
     protected static final float GRAVITY = 0.3f;
+    protected static final float JUMP_FORCE = 12f;
+    protected static final float TERMINAL_VELOCITY = 10f;
 
     protected final int left, right, jump, primary, secondary;
-    protected final float width = 10;
-    protected final float height = 20;
+    protected final float width = 20;
+    protected final float height = 50;
 
     protected float x, y;
     protected int xInput;
@@ -46,23 +48,26 @@ public class Player {
     }
 
     public void update(Main main) {
-        if (xInput != 0) {
+        if (xInput != 0)
             velocity.x += xInput * ACCELERATION;
-        } else {
+        else {
             velocity.x *= 1 - FRICTION;
             if (Math.abs(velocity.x) < 0.01f)
                 velocity.x = 0;
         }
         velocity.x = Math.clamp(velocity.x, -MAX_SPEED, MAX_SPEED);
 
-        velocity.y *= 1 + GRAVITY;
-        velocity.y = Math.clamp(velocity.y, -MAX_SPEED, MAX_SPEED);
+        if (isInAir())
+            velocity.y += 1 + GRAVITY;
+        else if (velocity.y > 0)
+            velocity.y = 0;
+        velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
 
         x += velocity.x;
         x = Math.clamp(x, 0, GraphicsBuffer.REFERENCE_WIDTH - width);
 
         y += velocity.y;
-        y = Math.clamp(y, 0, GraphicsBuffer.REFERENCE_HEIGHT - height);
+        y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
     }
 
     private void keyPressed(KeyEvent event) {
@@ -79,8 +84,9 @@ public class Player {
         }
 
 
-        if (keyCode == jump) {
-        } //jump
+        if (keyCode == jump && !isInAir()) {
+            velocity.y = -JUMP_FORCE;
+        }
         if (keyCode == primary) {
         } //primary
         if (keyCode == secondary) {
@@ -103,6 +109,10 @@ public class Player {
 
         if (!leftKeyDown && !rightKeyDown)
             xInput = 0;
+    }
+
+    private boolean isInAir() {
+        return y < GraphicsBuffer.REFERENCE_HEIGHT - height;
     }
 
     public Consumer<KeyEvent> getKeyPressListener() {
