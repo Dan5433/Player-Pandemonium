@@ -3,12 +3,13 @@ package me.abtu.graphics.buttons;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
+import java.util.function.Consumer;
+
 public class Button {
     protected final float x, y, width, height;
     protected final int drawMode;
-    protected final Runnable callback;
-
-    protected final String text;
+    protected final Consumer<Button> callback;
+    protected final String tag;
     protected final int textColor;
 
     protected final int strokeColor;
@@ -17,8 +18,10 @@ public class Button {
     protected final int normalColor;
     protected final int hoverColor;
     protected final int pressedColor;
+    protected final int disabledColor;
 
     protected final int hoverExpand;
+    protected String text;
 
 
     protected State state = State.NORMAL;
@@ -39,6 +42,8 @@ public class Button {
         this.hoverColor = builder.hoverColor;
         this.pressedColor = builder.pressedColor;
         this.hoverExpand = builder.hoverExpand;
+        this.tag = builder.tag;
+        this.disabledColor = builder.disabledColor;
     }
 
 
@@ -46,11 +51,14 @@ public class Button {
         final int previousFill = graphics.fillColor;
         final int previousStroke = graphics.strokeColor;
         final float previousStrokeWeight = graphics.strokeWeight;
+        final int previousTextAlignX = graphics.textAlign;
+        final int previousTextAlignY = graphics.textAlignY;
 
         final int color = switch (state) {
             case NORMAL -> normalColor;
             case HOVERED -> hoverColor;
             case PRESSED -> pressedColor;
+            case DISABLED -> disabledColor;
         };
         graphics.fill(color);
 
@@ -58,7 +66,7 @@ public class Button {
         graphics.strokeWeight(strokeWeight);
 
         graphics.rectMode(drawMode);
-        if (state == State.NORMAL)
+        if (state == State.NORMAL || state == State.DISABLED)
             graphics.rect(x, y, width, height);
         else
             graphics.rect(x, y, width + hoverExpand * 2, height + hoverExpand * 2);
@@ -73,23 +81,33 @@ public class Button {
         graphics.fill(previousFill);
         graphics.stroke(previousStroke);
         graphics.strokeWeight(previousStrokeWeight);
+        graphics.textAlign(previousTextAlignX, previousTextAlignY);
     }
 
     public void update(float mouseX, float mouseY, boolean mousePressed) {
-        if (isMouseInside(mouseX, mouseY)) {
-            if (mousePressed)
-                state = State.PRESSED;
-            else {
-                if (state == State.PRESSED)
-                    onPress();
+        if (state == State.DISABLED)
+            return;
 
-                state = State.HOVERED;
-            }
-        } else
+        if (!isMouseInside(mouseX, mouseY)) {
             state = State.NORMAL;
+            return;
+        }
+
+        if (mousePressed) {
+            state = State.PRESSED;
+            return;
+        }
+
+        if (state == State.PRESSED)
+            onPress();
+        state = State.HOVERED;
     }
 
-    public boolean isMouseInside(float mouseX, float mouseY) {
+    public void changeText(String text) {
+        this.text = text;
+    }
+
+    protected boolean isMouseInside(float mouseX, float mouseY) {
         switch (drawMode) {
             case PConstants.CORNER -> {
                 if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height)
@@ -109,19 +127,35 @@ public class Button {
     }
 
     protected void onPress() {
-        callback.run();
+        if (callback == null)
+            return;
+
+        callback.accept(this);
+    }
+
+    public void disable() {
+        state = State.DISABLED;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void enable() {
+        state = State.NORMAL;
     }
 
     protected enum State {
         NORMAL,
         HOVERED,
-        PRESSED
+        PRESSED,
+        DISABLED
     }
 
     public static class Builder {
         private final float x, y, width, height;
         private final int drawMode;
-        private final Runnable pressCallback;
+        private final Consumer<Button> pressCallback;
 
         private String text = "";
         private int textColor = 0;
@@ -132,11 +166,14 @@ public class Button {
         private int normalColor = 255;
         private int hoverColor = 220;
         private int pressedColor = 200;
+        private int disabledColor = 125;
 
-        protected int hoverExpand;
+        private int hoverExpand;
+
+        private String tag;
 
 
-        public Builder(float x, float y, float width, float height, int drawMode, Runnable pressCallback) {
+        public Builder(float x, float y, float width, float height, int drawMode, Consumer<Button> pressCallback) {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -155,10 +192,11 @@ public class Button {
             return this;
         }
 
-        public Builder buttonColors(int normalColor, int hoverColor, int pressedColor) {
+        public Builder buttonColors(int normalColor, int hoverColor, int pressedColor, int disabledColor) {
             this.normalColor = normalColor;
             this.hoverColor = hoverColor;
             this.pressedColor = pressedColor;
+            this.disabledColor = disabledColor;
             return this;
         }
 
@@ -170,6 +208,11 @@ public class Button {
 
         public Builder hoverExpand(int hoverExpand) {
             this.hoverExpand = hoverExpand;
+            return this;
+        }
+
+        public Builder tag(String tag) {
+            this.tag = tag;
             return this;
         }
 
