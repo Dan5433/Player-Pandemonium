@@ -11,12 +11,14 @@ import java.util.function.Consumer;
 
 
 public class Player {
-    protected static final float MAX_SPEED = 3.5f;
-    protected static final float ACCELERATION = 0.2f;
-    protected static final float FRICTION = 0.15f;
-    protected static final float GRAVITY = 0.3f;
-    protected static final float JUMP_FORCE = 12f;
+    //unscaled
+    protected static final float MAX_SPEED = 5.5f;
     protected static final float TERMINAL_VELOCITY = 10f;
+    protected static final float JUMP_FORCE = 12f;
+    //scaled for delta time
+    protected static final float ACCELERATION = 12.5f;
+    protected static final float FRICTION = 7.5f;
+    protected static final float GRAVITY = 0.75f;
 
     protected final int left, right, jump, primary, secondary;
     protected final float width = 20;
@@ -48,17 +50,19 @@ public class Player {
     }
 
     public void update(Main main) {
+        float deltaTimeSeconds = main.getDeltaTime() / 1000f;
+
         if (xInput != 0)
-            velocity.x += xInput * ACCELERATION;
+            velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
         else {
-            velocity.x *= 1 - FRICTION;
+            velocity.x *= 1 - FRICTION * deltaTimeSeconds;
             if (Math.abs(velocity.x) < 0.01f)
                 velocity.x = 0;
         }
         velocity.x = Math.clamp(velocity.x, -MAX_SPEED, MAX_SPEED);
 
         if (isInAir())
-            velocity.y += 1 + GRAVITY;
+            velocity.y += 1 + GRAVITY * deltaTimeSeconds;
         else if (velocity.y > 0)
             velocity.y = 0;
         velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
