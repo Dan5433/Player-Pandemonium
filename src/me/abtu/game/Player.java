@@ -28,6 +28,7 @@ public class Player {
     protected int xInput;
     protected boolean leftKeyDown, rightKeyDown;
     protected PVector velocity = new PVector(0, 1);
+    protected boolean isOnPlatform = false;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
 
@@ -45,13 +46,40 @@ public class Player {
 
     public void draw(PGraphics graphics) {
         graphics.rectMode(PConstants.CORNER);
+        graphics.strokeWeight(0.5f);
+        graphics.stroke(0);
         graphics.fill(255, 0, 0);
         graphics.rect(x, y, width, height);
     }
 
     public void update(Main main) {
         float deltaTimeSeconds = main.getDeltaTime() / 1000f;
+        updateVelocity(deltaTimeSeconds);
 
+        x += velocity.x;
+        x = Math.clamp(x, 0, GraphicsBuffer.REFERENCE_WIDTH - width);
+
+        y += velocity.y;
+        y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
+
+        platformCheck(main.getArena().getPlatforms());
+    }
+
+    private void platformCheck(Platform[] platforms) {
+        for (Platform platform : platforms) {
+            if (platform.canObjectStandOn(x, x + width, y + height)) {
+                isOnPlatform = true;
+
+                //set y to platform top
+                y = platform.getTopSurfaceY() - height;
+                return;
+            }
+        }
+
+        isOnPlatform = false;
+    }
+
+    private void updateVelocity(float deltaTimeSeconds) {
         if (xInput != 0)
             velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
         else {
@@ -66,12 +94,6 @@ public class Player {
         else if (velocity.y > 0)
             velocity.y = 0;
         velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
-
-        x += velocity.x;
-        x = Math.clamp(x, 0, GraphicsBuffer.REFERENCE_WIDTH - width);
-
-        y += velocity.y;
-        y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
     }
 
     private void keyPressed(KeyEvent event) {
@@ -116,7 +138,7 @@ public class Player {
     }
 
     private boolean isInAir() {
-        return y < GraphicsBuffer.REFERENCE_HEIGHT - height;
+        return y < GraphicsBuffer.REFERENCE_HEIGHT - height && !isOnPlatform;
     }
 
     public Consumer<KeyEvent> getKeyPressListener() {

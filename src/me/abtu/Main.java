@@ -36,7 +36,9 @@ public final class Main extends PApplet {
 
     //graphics
     private GraphicsBuffer ui, moving;
-    private PImage arena;
+    private GameArena arena;
+    private PImage cachedArena;
+
     //control values
     private State state = State.MENU;
     private float deltaTime = 0;
@@ -66,11 +68,11 @@ public final class Main extends PApplet {
 
 
         //draw graphics
-        if (arena != null)
-            image(arena, 0, 0);
-
         if (moving != null)
             image(moving.getGraphicsImage(this), 0, 0);
+
+        if (arena != null)
+            image(cachedArena, 0, 0);
 
         if (ui != null)
             image(ui.getGraphicsImage(this), 0, 0);
@@ -102,7 +104,8 @@ public final class Main extends PApplet {
         players = playerMenu.getPlayers(this);
 
         ui = null;
-        arena = new GameArena(this, NEAREST_NEIGHBOR).getGraphicsImage(this);
+        arena = new GameArena(this, NEAREST_NEIGHBOR);
+        cachedArena = arena.getGraphicsImage(this);
         moving = new PlayerGraphics(this, NEAREST_NEIGHBOR);
         state = State.GAME;
     }
@@ -148,5 +151,9 @@ public final class Main extends PApplet {
         MENU,
         GAME,
         PAUSE
+    }
+
+    public GameArena getArena() {
+        return arena;
     }
 }

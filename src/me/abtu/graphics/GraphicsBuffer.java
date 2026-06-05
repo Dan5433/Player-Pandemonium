@@ -20,7 +20,9 @@ public abstract class GraphicsBuffer {
 
     protected final float scaleToScreenX;
     protected final float scaleToScreenY;
-    protected int resizeMode;
+    protected final int resizeMode;
+    protected int backgroundColor = 255;
+
 
     public GraphicsBuffer(Main main, int resizeMode) {
         this.resizeMode = resizeMode;
@@ -41,7 +43,7 @@ public abstract class GraphicsBuffer {
         PGraphics graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT);
 
         graphics.beginDraw();
-        graphics.background(255);
+        graphics.background(backgroundColor);
         graphics.fill(255);
         graphics.stroke(0);
 
