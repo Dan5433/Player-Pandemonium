@@ -3,10 +3,13 @@ package me.abtu;
 import me.abtu.game.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.graphics.game.GameArena;
+import me.abtu.graphics.game.PlayerGraphics;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PImage;
 import processing.event.KeyEvent;
 
 import java.util.ArrayList;
@@ -23,14 +26,22 @@ public final class Main extends PApplet {
         noSmooth();
     }
 
+
+    //events
+    private final ArrayList<Consumer<com.jogamp.newt.event.KeyEvent>> keyPressEventListeners = new ArrayList<>();
+    private final ArrayList<Consumer<com.jogamp.newt.event.KeyEvent>> keyReleaseEventListeners = new ArrayList<>();
+
     // fonts
     private PFont pixelbit, jersey;
 
     //graphics
-    private GraphicsBuffer ui;
+    private GraphicsBuffer ui, moving;
+    private GameArena arena;
+    private PImage cachedArena;
 
-    //events
-    private final ArrayList<Consumer<KeyEvent>> keyPressEventListeners = new ArrayList<>();
+    //control values
+    private State state = State.MENU;
+    private float deltaTime = 0;
 
     //gameplay
     private Player[] players;
@@ -47,9 +58,24 @@ public final class Main extends PApplet {
     }
 
     public void draw() {
+        deltaTime = (System.nanoTime() - frameRateLastNanos) / 1_000_000f;
         background(255);
 
-        image(ui.getGraphicsImage(this), 0, 0);
+        if (state == State.GAME) {
+            for (Player player : players)
+                player.update(this);
+        }
+
+
+        //draw graphics
+        if (moving != null)
+            image(moving.getGraphicsImage(this), 0, 0);
+
+        if (arena != null)
+            image(cachedArena, 0, 0);
+
+        if (ui != null)
+            image(ui.getGraphicsImage(this), 0, 0);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -58,8 +84,13 @@ public final class Main extends PApplet {
             key = 0;
 
 
-        for (Consumer<KeyEvent> listener : keyPressEventListeners)
-            listener.accept(event);
+        for (Consumer<com.jogamp.newt.event.KeyEvent> listener : keyPressEventListeners)
+            listener.accept((com.jogamp.newt.event.KeyEvent) event.getNative());
+    }
+
+    public void keyReleased(KeyEvent event) {
+        for (Consumer<com.jogamp.newt.event.KeyEvent> listener : keyReleaseEventListeners)
+            listener.accept((com.jogamp.newt.event.KeyEvent) event.getNative());
     }
 
     @SuppressWarnings("unused")
@@ -70,16 +101,29 @@ public final class Main extends PApplet {
     @SuppressWarnings("unused")
     public void startGame(Button button) {
         PlayerMenu playerMenu = (PlayerMenu) ui;
-        players = playerMenu.getPlayers();
-        System.out.println("Starting game...");
+        players = playerMenu.getPlayers(this);
+
+        ui = null;
+        arena = new GameArena(this, NEAREST_NEIGHBOR);
+        cachedArena = arena.getGraphicsImage(this);
+        moving = new PlayerGraphics(this, NEAREST_NEIGHBOR);
+        state = State.GAME;
     }
 
-    public void addKeyPressEventListener(Consumer<KeyEvent> listener) {
+    public void addKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
         keyPressEventListeners.add(listener);
     }
 
-    public void removeKeyPressEventListener(Consumer<KeyEvent> listener) {
+    public void removeKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
         keyPressEventListeners.remove(listener);
+    }
+
+    public void addKeyReleaseEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
+        keyReleaseEventListeners.add(listener);
+    }
+
+    public void removeKeyReleaseEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
+        keyReleaseEventListeners.remove(listener);
     }
 
     private void loadFonts() {
@@ -93,5 +137,23 @@ public final class Main extends PApplet {
 
     public PFont getDefaultFont() {
         return pixelbit;
+    }
+
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
+    }
+
+    private enum State {
+        MENU,
+        GAME,
+        PAUSE
+    }
+
+    public GameArena getArena() {
+        return arena;
     }
 }

@@ -16,7 +16,7 @@ public class PlayerMenu extends GraphicsBuffer {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 4;
 
-    private final ArrayList<Player> players = new ArrayList<>(2);
+    private final ArrayList<PlayerCard> playerCards = new ArrayList<>(2);
 
     private final Button addPlayerButton, removePlayerButton, startGameButton;
 
@@ -26,13 +26,13 @@ public class PlayerMenu extends GraphicsBuffer {
         super(main, resizeMode);
         this.main = main;
 
-        players.add(new Player(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
+        playerCards.add(new PlayerCard(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
                 this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
-        main.addKeyPressEventListener(players.getFirst().getKeybindEventListener());
+        main.addKeyPressEventListener(playerCards.getFirst().getKeybindEventListener());
 
-        players.add(new Player(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL,
+        playerCards.add(new PlayerCard(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL,
                 this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
-        main.addKeyPressEventListener(players.get(1).getKeybindEventListener());
+        main.addKeyPressEventListener(playerCards.get(1).getKeybindEventListener());
 
         final int buttonSize = 20;
         final int buttonMargin = 10;
@@ -58,22 +58,22 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private void addPlayer(Button button) {
-        if (players.size() >= MAX_PLAYERS)
+        if (playerCards.size() >= MAX_PLAYERS)
             return;
 
         startGameButton.disable();
 
-        Player player = new Player(this::clearListeningButtons, this::canBindKey, this::updateStartButtonState);
-        players.add(player);
-        main.addKeyPressEventListener(player.getKeybindEventListener());
+        PlayerCard playerCard = new PlayerCard(this::clearListeningButtons, this::canBindKey, this::updateStartButtonState);
+        playerCards.add(playerCard);
+        main.addKeyPressEventListener(playerCard.getKeybindEventListener());
     }
 
     private void removePlayer(Button button) {
-        if (players.size() <= MIN_PLAYERS)
+        if (playerCards.size() <= MIN_PLAYERS)
             return;
 
-        Player player = players.removeLast();
-        main.removeKeyPressEventListener(player.getKeybindEventListener());
+        PlayerCard playerCard = playerCards.removeLast();
+        main.removeKeyPressEventListener(playerCard.getKeybindEventListener());
 
         updateStartButtonState();
     }
@@ -97,15 +97,15 @@ public class PlayerMenu extends GraphicsBuffer {
         final float cardMargin = REFERENCE_WIDTH / 64f;
         final float cardWidth = REFERENCE_WIDTH / 5f;
         final float cardHeight = REFERENCE_HEIGHT / 2.4f;
-        int numPlayers = players.size();
+        int numPlayers = playerCards.size();
         for (int i = 0; i < numPlayers; i++) {
-            Player player = players.get(i);
+            PlayerCard playerCard = playerCards.get(i);
 
-            Button leftKeybindButton = player.getLeftKeybindButton();
-            Button rightKeybindButton = player.getRightKeybindButton();
-            Button jumpKeybindButton = player.getJumpKeybindButton();
-            Button primaryKeybindButton = player.getPrimaryKeybindButton();
-            Button secondaryKeybindButton = player.getSecondaryKeybindButton();
+            Button leftKeybindButton = playerCard.getLeftKeybindButton();
+            Button rightKeybindButton = playerCard.getRightKeybindButton();
+            Button jumpKeybindButton = playerCard.getJumpKeybindButton();
+            Button primaryKeybindButton = playerCard.getPrimaryKeybindButton();
+            Button secondaryKeybindButton = playerCard.getSecondaryKeybindButton();
 
             float offset = i - (numPlayers - 1) / 2f;
             float cardX = HALF_WIDTH + offset * (cardWidth + cardMargin);
@@ -173,8 +173,8 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private void updateStartButtonState() {
-        for (Player player : players) {
-            for (int keybind : player.getKeybinds()) {
+        for (PlayerCard playerCard : playerCards) {
+            for (int keybind : playerCard.getKeybinds()) {
                 if (keybind == 0) {
                     startGameButton.disable();
                     return;
@@ -186,16 +186,16 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private void clearListeningButtons() {
-        for (Player player : players)
-            player.clearListeningButton();
+        for (PlayerCard playerCard : playerCards)
+            playerCard.clearListeningButton();
     }
 
     private boolean canBindKey(int keyCode) {
         if (keyCode == KeyEvent.VK_ESCAPE)
             return false;
 
-        for (Player player : players) {
-            int[] keybinds = player.getKeybinds();
+        for (PlayerCard playerCard : playerCards) {
+            int[] keybinds = playerCard.getKeybinds();
             for (int keybind : keybinds) {
                 if (keybind == keyCode)
                     return false;
@@ -204,7 +204,19 @@ public class PlayerMenu extends GraphicsBuffer {
         return true;
     }
 
-    public Player[] getPlayers() {
-        return players.toArray(new Player[0]);
+    public Player[] getPlayers(Main main) {
+        Player[] players = new Player[playerCards.size()];
+        for (int i = 0; i < playerCards.size(); i++) {
+            PlayerCard playerCard = playerCards.get(i);
+
+            float horizontalFraction = (float) i / (players.length - 1);
+            Player player = new Player(playerCard.getKeybinds(), horizontalFraction);
+
+            main.addKeyPressEventListener(player.getKeyPressListener());
+            main.addKeyReleaseEventListener(player.getKeyReleaseListener());
+
+            players[i] = player;
+        }
+        return players;
     }
 }
