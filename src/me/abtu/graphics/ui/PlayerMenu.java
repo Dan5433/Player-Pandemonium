@@ -85,10 +85,9 @@ public class PlayerMenu extends GraphicsBuffer {
         startGameButton.update(mouseX, mouseY, main.mousePressed);
         graphics.fill(0);
 
-        final int titleSize = 65;
         graphics.textFont(main.getTitleFont());
         graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
-        graphics.textSize(titleSize);
+        graphics.textSize(TITLE_SIZE);
         graphics.text("Choose Players", HALF_WIDTH, FIFTH_HEIGHT);
 
         graphics.rectMode(PConstants.CENTER);
