@@ -26,7 +26,7 @@ public class Player {
 
     protected float x, y;
     protected int xInput;
-    protected boolean leftKeyDown, rightKeyDown;
+    protected boolean leftKeyDown, rightKeyDown, jumpKeyDown;
     protected PVector velocity = new PVector(0, 1);
     protected boolean isOnPlatform = false;
 
@@ -93,8 +93,13 @@ public class Player {
 
         if (isInAir())
             velocity.y += 1 + GRAVITY * deltaTimeSeconds;
-        else if (velocity.y > 0)
-            velocity.y = 0;
+        else {
+            if (velocity.y > 0)
+                velocity.y = 0;
+
+            if (jumpKeyDown)
+                velocity.y = -JUMP_FORCE;
+        }
         velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
     }
 
@@ -111,10 +116,10 @@ public class Player {
             xInput = 1;
         }
 
-
-        if (keyCode == jump && !isInAir()) {
-            velocity.y = -JUMP_FORCE;
+        if (keyCode == jump) {
+            jumpKeyDown = true;
         }
+
         if (keyCode == primary) {
         } //primary
         if (keyCode == secondary) {
@@ -129,6 +134,9 @@ public class Player {
 
         if (keyCode == right)
             rightKeyDown = false;
+
+        if (keyCode == jump)
+            jumpKeyDown = false;
 
         if (leftKeyDown)
             xInput = -1;
