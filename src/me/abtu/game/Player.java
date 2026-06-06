@@ -164,6 +164,11 @@ public class Player {
         coyoteFrames = 0;
     }
 
+    public void cleanup(Main main) {
+        main.removeKeyPressEventListener(keyPressListener);
+        main.removeKeyReleaseEventListener(keyReleaseListener);
+    }
+
     private boolean isInAir() {
         return y < GraphicsBuffer.REFERENCE_HEIGHT - height && !isOnPlatform;
     }
