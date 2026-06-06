@@ -109,6 +109,19 @@ public final class Main extends PApplet {
     }
 
     @SuppressWarnings("unused")
+    public void startGame(Button button) {
+        PlayerMenu playerMenu = (PlayerMenu) ui;
+        players = playerMenu.getPlayers(this);
+        playerMenu.cleanup(this);
+
+        ui = null;
+        arena = new GameArena(this, NEAREST_NEIGHBOR);
+        cachedArena = arena.getGraphicsImage(this);
+        moving = new PlayerGraphics(this, NEAREST_NEIGHBOR);
+        state = State.GAME;
+    }
+
+    @SuppressWarnings("unused")
     public void togglePause(Button button) {
         if (state == State.GAME)
             state = State.PAUSED;
@@ -123,18 +136,6 @@ public final class Main extends PApplet {
 
         ui = new TitleScreen(this, NEAREST_NEIGHBOR);
         state = State.MENU;
-    }
-
-    @SuppressWarnings("unused")
-    public void startGame(Button button) {
-        PlayerMenu playerMenu = (PlayerMenu) ui;
-        players = playerMenu.getPlayers(this);
-
-        ui = null;
-        arena = new GameArena(this, NEAREST_NEIGHBOR);
-        cachedArena = arena.getGraphicsImage(this);
-        moving = new PlayerGraphics(this, NEAREST_NEIGHBOR);
-        state = State.GAME;
     }
 
     public void addKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {

@@ -218,4 +218,9 @@ public class PlayerMenu extends GraphicsBuffer {
         }
         return players;
     }
+
+    public void cleanup(Main main) {
+        for (PlayerCard playerCard : playerCards)
+            main.removeKeyPressEventListener(playerCard.getKeybindEventListener());
+    }
 }
