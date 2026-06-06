@@ -12,9 +12,10 @@ import java.util.function.Consumer;
 
 public class Player {
     //unscaled
-    protected static final float MAX_SPEED = 5.5f;
+    protected static final float MAX_HORIZONTAL_VELOCITY = 5.5f;
     protected static final float TERMINAL_VELOCITY = 10f;
     protected static final float JUMP_FORCE = 12f;
+    protected static final int COYOTE_FRAMES = 5;
     //scaled for delta time
     protected static final float ACCELERATION = 12.5f;
     protected static final float FRICTION = 7.5f;
@@ -25,10 +26,13 @@ public class Player {
     protected final float height = 50;
 
     protected float x, y;
+    protected PVector velocity = new PVector(0, 1);
+
+    protected boolean isOnPlatform = false;
+    protected int coyoteFrames = COYOTE_FRAMES;
+
     protected int xInput;
     protected boolean leftKeyDown, rightKeyDown, jumpKeyDown;
-    protected PVector velocity = new PVector(0, 1);
-    protected boolean isOnPlatform = false;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
 
@@ -54,6 +58,7 @@ public class Player {
 
     public void update(Main main) {
         float deltaTimeSeconds = main.getDeltaTime() / 1000f;
+
         updateVelocity(deltaTimeSeconds);
 
         x += velocity.x;
@@ -64,6 +69,10 @@ public class Player {
         y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
 
         platformCheck(main.getArena().getPlatforms(), previousY);
+
+        coyoteFrames--;
+        if (isOnPlatform)
+            coyoteFrames = COYOTE_FRAMES;
     }
 
     private void platformCheck(Platform[] platforms, float previousY) {
@@ -89,16 +98,15 @@ public class Player {
             if (Math.abs(velocity.x) < 0.01f)
                 velocity.x = 0;
         }
-        velocity.x = Math.clamp(velocity.x, -MAX_SPEED, MAX_SPEED);
+        velocity.x = Math.clamp(velocity.x, -MAX_HORIZONTAL_VELOCITY, MAX_HORIZONTAL_VELOCITY);
 
-        if (isInAir())
+        if (isInAir() && coyoteFrames <= 0) {
             velocity.y += 1 + GRAVITY * deltaTimeSeconds;
-        else {
-            if (velocity.y > 0)
-                velocity.y = 0;
+        } else {
+            velocity.y = 0;
 
             if (jumpKeyDown)
-                velocity.y = -JUMP_FORCE;
+                jump();
         }
         velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
     }
@@ -145,6 +153,11 @@ public class Player {
 
         if (!leftKeyDown && !rightKeyDown)
             xInput = 0;
+    }
+
+    private void jump() {
+        velocity.y = -JUMP_FORCE;
+        coyoteFrames = 0;
     }
 
     private boolean isInAir() {
