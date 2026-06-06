@@ -59,15 +59,17 @@ public class Player {
         x += velocity.x;
         x = Math.clamp(x, 0, GraphicsBuffer.REFERENCE_WIDTH - width);
 
+        float previousY = y;
         y += velocity.y;
         y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
 
-        platformCheck(main.getArena().getPlatforms());
+        platformCheck(main.getArena().getPlatforms(), previousY);
     }
 
-    private void platformCheck(Platform[] platforms) {
+    private void platformCheck(Platform[] platforms, float previousY) {
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x, x + width, y + height)) {
+            // Use improved collision detection with velocity and previous position
+            if (platform.canObjectStandOn(x, x + width, y + height, previousY + height, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
