@@ -3,6 +3,7 @@ package me.abtu.game;
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
 import me.abtu.graphics.GraphicsBuffer;
+import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
@@ -37,12 +38,15 @@ public class Player {
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
 
 
-    public Player(int[] keybinds) {
+    public Player(int[] keybinds, float horizontalFraction) {
         this.left = keybinds[0];
         this.right = keybinds[1];
         this.jump = keybinds[2];
         this.primary = keybinds[3];
         this.secondary = keybinds[4];
+
+        this.x = PApplet.lerp(0, GraphicsBuffer.REFERENCE_WIDTH - width, horizontalFraction);
+        this.y = GraphicsBuffer.REFERENCE_HEIGHT - height;
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
