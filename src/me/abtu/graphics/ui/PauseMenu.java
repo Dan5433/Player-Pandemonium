@@ -22,7 +22,7 @@ public class PauseMenu extends GraphicsBuffer {
                 .hoverExpand(3)
                 .build();
         titleScreenButton = new Button.Builder(HALF_WIDTH, HALF_HEIGHT + buttonHeight / 2f + buttonMargin / 2f, buttonWidth, buttonHeight, PGraphics.CENTER, main::exitToTitleScreen)
-                .text("Main Menu")
+                .text("Title Screen")
                 .hoverExpand(3)
                 .build();
     }

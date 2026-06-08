@@ -1,4 +1,4 @@
-package me.abtu.game;
+package me.abtu.game.environment;
 
 import processing.core.PConstants;
 import processing.core.PGraphics;

@@ -1,6 +1,6 @@
 package me.abtu;
 
-import me.abtu.game.Player;
+import me.abtu.game.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
 import me.abtu.graphics.game.GameArena;

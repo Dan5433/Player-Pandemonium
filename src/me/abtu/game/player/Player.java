@@ -1,7 +1,8 @@
-package me.abtu.game;
+package me.abtu.game.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
+import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PApplet;
 import processing.core.PConstants;
