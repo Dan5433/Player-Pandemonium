@@ -139,6 +139,8 @@ public final class Main extends PApplet {
         for (Player player : players)
             player.cleanup(this);
 
+        entities.clear();
+
         ui = new TitleScreen(this, NEAREST_NEIGHBOR);
         state = State.MENU;
     }
