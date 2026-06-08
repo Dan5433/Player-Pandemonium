@@ -1,7 +1,7 @@
 package me.abtu.graphics.game;
 
 import me.abtu.Main;
-import me.abtu.game.player.Player;
+import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PGraphics;
 

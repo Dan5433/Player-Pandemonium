@@ -1,7 +1,8 @@
-package me.abtu.game.player;
+package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
+import me.abtu.game.entity.Entity;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PApplet;
@@ -12,7 +13,7 @@ import processing.core.PVector;
 import java.util.function.Consumer;
 
 
-public class Player {
+public class Player extends Entity {
     //unscaled
     protected static final float MAX_HORIZONTAL_VELOCITY = 5.5f;
     protected static final float TERMINAL_VELOCITY = 10f;
@@ -24,11 +25,6 @@ public class Player {
     protected static final float GRAVITY = 0.75f;
 
     protected final int left, right, jump, primary, secondary;
-    protected final float width = 20;
-    protected final float height = 50;
-
-    protected float x, y;
-    protected PVector velocity = new PVector(0, 1);
 
     protected boolean isOnPlatform = false;
     protected int coyoteFrames = COYOTE_FRAMES;
@@ -40,14 +36,17 @@ public class Player {
 
 
     public Player(int[] keybinds, float horizontalFraction) {
-        this.left = keybinds[0];
-        this.right = keybinds[1];
-        this.jump = keybinds[2];
-        this.primary = keybinds[3];
-        this.secondary = keybinds[4];
+        super(0, 0, 20, 50);
+        left = keybinds[0];
+        right = keybinds[1];
+        jump = keybinds[2];
+        primary = keybinds[3];
+        secondary = keybinds[4];
 
-        this.x = PApplet.lerp(0, GraphicsBuffer.REFERENCE_WIDTH - width, horizontalFraction);
-        this.y = GraphicsBuffer.REFERENCE_HEIGHT - height;
+        x = PApplet.lerp(0, GraphicsBuffer.REFERENCE_WIDTH - width, horizontalFraction);
+        y = GraphicsBuffer.REFERENCE_HEIGHT - height;
+
+        velocity = new PVector(0, 1);
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
