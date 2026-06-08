@@ -31,7 +31,7 @@ public class Player extends Entity {
     protected boolean isOnPlatform = false;
     protected int coyoteFrames = COYOTE_FRAMES;
 
-    protected int xInput;
+    protected int xInput, lastXInput;
     protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
@@ -141,11 +141,13 @@ public class Player extends Entity {
         if (keyCode == left) {
             leftKeyDown = true;
             xInput = -1;
+            lastXInput = xInput;
         }
 
         if (keyCode == right) {
             rightKeyDown = true;
             xInput = 1;
+            lastXInput = xInput;
         }
 
         if (keyCode == jump) {
@@ -208,5 +210,9 @@ public class Player extends Entity {
 
     public Consumer<KeyEvent> getKeyReleaseListener() {
         return keyReleaseListener;
+    }
+
+    public int getLastXInput() {
+        return lastXInput;
     }
 }

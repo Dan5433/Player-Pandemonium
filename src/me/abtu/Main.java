@@ -180,6 +180,10 @@ public final class Main extends PApplet {
         entities.add(entity);
     }
 
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
+    }
+
     public float getDeltaTime() {
         return deltaTime;
     }
