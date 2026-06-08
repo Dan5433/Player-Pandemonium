@@ -7,11 +7,10 @@ import processing.core.PVector;
 
 public class PrimaryAbility extends Ability {
     @Override
-    public void tryUseAbility(Player player, Main main) {
-        if (cooldownSeconds > 0)
-            return;
-
+    public void useAbility(Player player, Main main) {
         int xDirection = player.getLastXInput();
+        if (xDirection == 0)
+            return;
 
         final int projectileSize = 10;
         int xOffset = xDirection * projectileSize * 2;
@@ -26,6 +25,4 @@ public class PrimaryAbility extends Ability {
 
         cooldownSeconds = 0.3f;
     }
-
-
 }
