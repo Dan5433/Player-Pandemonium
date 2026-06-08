@@ -15,7 +15,7 @@ public class Player {
     //unscaled
     protected static final float MAX_HORIZONTAL_VELOCITY = 5.5f;
     protected static final float TERMINAL_VELOCITY = 10f;
-    protected static final float JUMP_FORCE = 12f;
+    protected static final float JUMP_FORCE = 12.5f;
     protected static final int COYOTE_FRAMES = 5;
     //scaled for delta time
     protected static final float ACCELERATION = 12.5f;
@@ -81,7 +81,6 @@ public class Player {
 
     private void platformCheck(Platform[] platforms, float previousY) {
         for (Platform platform : platforms) {
-            // Use improved collision detection with velocity and previous position
             if (platform.canObjectStandOn(x, x + width, y + height, previousY + height, velocity.y)) {
                 isOnPlatform = true;
 
@@ -95,15 +94,21 @@ public class Player {
     }
 
     private void updateVelocity(float deltaTimeSeconds) {
+        //update x velocity
         if (xInput != 0)
             velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
         else {
-            velocity.x *= 1 - FRICTION * deltaTimeSeconds;
+            float frictionFactor = 1 - FRICTION * deltaTimeSeconds;
+            frictionFactor = Math.clamp(frictionFactor, 0, 1); //ensure friction doesnt cause velocity to invert on high delta time values
+            velocity.x *= frictionFactor;
+
+            //set velocity to 0 if very small
             if (Math.abs(velocity.x) < 0.01f)
                 velocity.x = 0;
         }
         velocity.x = Math.clamp(velocity.x, -MAX_HORIZONTAL_VELOCITY, MAX_HORIZONTAL_VELOCITY);
 
+        //update y velocity
         if (isInAir() && coyoteFrames <= 0) {
             velocity.y += 1 + GRAVITY * deltaTimeSeconds;
         } else {
@@ -150,6 +155,7 @@ public class Player {
         if (keyCode == jump)
             jumpKeyDown = false;
 
+        //set input to respective direction if another key is down
         if (leftKeyDown)
             xInput = -1;
         if (rightKeyDown)
