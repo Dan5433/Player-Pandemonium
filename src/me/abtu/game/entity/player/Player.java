@@ -37,6 +37,8 @@ public class Player extends Entity {
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
     protected boolean leftKeyDown, rightKeyDown, jumpKeyDown, primaryKeyDown, secondaryKeyDown;
 
+    protected float health = 100f;
+
 
     public Player(int[] keybinds, float horizontalFraction) {
         super(0, 0, 20, 50);
@@ -214,5 +216,19 @@ public class Player extends Entity {
 
     public int getLastXInput() {
         return lastXInput;
+    }
+
+    public PVector getTopLeftEdge() {
+        return new PVector(x - width / 2f, y - height / 2f);
+    }
+
+    public PVector getBottomRightEdge() {
+        return new PVector(x + width / 2f, y + height / 2f);
+    }
+
+    public void dealDamage(float damage) {
+        health -= damage;
+        if (health <= 0)
+            System.out.println("Dead");
     }
 }

@@ -186,6 +186,10 @@ public final class Main extends PApplet {
         entities.remove(entity);
     }
 
+    public Player[] getPlayers() {
+        return players;
+    }
+
     public float getDeltaTime() {
         return deltaTime;
     }

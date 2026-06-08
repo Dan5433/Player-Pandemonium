@@ -20,7 +20,7 @@ public class PrimaryAbility extends Ability {
         final int projectileDamage = 20;
 
         Projectile projectile = new Projectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
-                projectileDamage, projectileVelocity);
+                projectileDamage, projectileVelocity, player);
         main.addEntity(projectile);
 
         cooldownSeconds = 0.3f;
