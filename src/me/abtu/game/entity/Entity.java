@@ -1,5 +1,7 @@
 package me.abtu.game.entity;
 
+import me.abtu.Main;
+import processing.core.PGraphics;
 import processing.core.PVector;
 
 public abstract class Entity {
@@ -15,5 +17,17 @@ public abstract class Entity {
         this.width = width;
         this.height = height;
         this.velocity = new PVector(0, 0);
+    }
+
+    public abstract void update(Main main);
+
+    public abstract void draw(PGraphics graphics);
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
     }
 }

@@ -1,19 +1,19 @@
 package me.abtu.graphics.game;
 
 import me.abtu.Main;
-import me.abtu.game.entity.player.Player;
+import me.abtu.game.entity.Entity;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PGraphics;
 
-public class PlayerGraphics extends GraphicsBuffer {
+public class EntityGraphics extends GraphicsBuffer {
 
-    public PlayerGraphics(Main main, int resizeMode) {
+    public EntityGraphics(Main main, int resizeMode) {
         super(main, resizeMode);
     }
 
     @Override
     protected void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY) {
-        for (Player player : main.getPlayers())
-            player.draw(graphics);
+        for (Entity entity : main.getEntities())
+            entity.draw(graphics);
     }
 }

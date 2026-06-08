@@ -3,6 +3,8 @@ package me.abtu.game.entity.player;
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
 import me.abtu.game.entity.Entity;
+import me.abtu.game.entity.player.abilities.Ability;
+import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
 import processing.core.PApplet;
@@ -30,9 +32,10 @@ public class Player extends Entity {
     protected int coyoteFrames = COYOTE_FRAMES;
 
     protected int xInput;
-    protected boolean leftKeyDown, rightKeyDown, jumpKeyDown;
+    protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
+    protected boolean leftKeyDown, rightKeyDown, jumpKeyDown, primaryKeyDown, secondaryKeyDown;
 
 
     public Player(int[] keybinds, float horizontalFraction) {
@@ -50,6 +53,9 @@ public class Player extends Entity {
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
+
+        primaryAbility = new PrimaryAbility();
+        secondaryAbility = null;
     }
 
     public void draw(PGraphics graphics) {
@@ -77,6 +83,8 @@ public class Player extends Entity {
         coyoteFrames--;
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
+
+        updateAbilities(main, deltaTimeSeconds);
     }
 
     private void platformCheck(Platform[] platforms, float previousY) {
@@ -91,6 +99,13 @@ public class Player extends Entity {
         }
 
         isOnPlatform = false;
+    }
+
+    private void updateAbilities(Main main, float deltaTimeSeconds) {
+        primaryAbility.update(deltaTimeSeconds);
+
+        if (primaryKeyDown)
+            primaryAbility.tryUseAbility(this, main);
     }
 
     private void updateVelocity(float deltaTimeSeconds) {
@@ -137,10 +152,11 @@ public class Player extends Entity {
             jumpKeyDown = true;
         }
 
-        if (keyCode == primary) {
-        } //primary
-        if (keyCode == secondary) {
-        } //secondary
+        if (keyCode == primary)
+            primaryKeyDown = true;
+
+        if (keyCode == secondary)
+            secondaryKeyDown = true;
     }
 
     private void keyReleased(KeyEvent event) {
@@ -154,6 +170,13 @@ public class Player extends Entity {
 
         if (keyCode == jump)
             jumpKeyDown = false;
+
+        if (keyCode == primary)
+            primaryKeyDown = false;
+
+        if (keyCode == secondary)
+            secondaryKeyDown = false;
+
 
         //set input to respective direction if another key is down
         if (leftKeyDown)

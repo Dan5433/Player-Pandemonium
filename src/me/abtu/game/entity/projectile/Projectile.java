@@ -1,5 +1,6 @@
 package me.abtu.game.entity.projectile;
 
+import me.abtu.Main;
 import me.abtu.game.entity.Entity;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -12,6 +13,10 @@ public class Projectile extends Entity {
     public Projectile(float x, float y, float width, float height, float damage) {
         super(x, y, width, height);
         this.damage = damage;
+    }
+
+    @Override
+    public void update(Main main) {
     }
 
     public void draw(PGraphics graphics) {

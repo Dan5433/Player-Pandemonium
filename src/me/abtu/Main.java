@@ -1,10 +1,11 @@
 package me.abtu;
 
+import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.graphics.game.EntityGraphics;
 import me.abtu.graphics.game.GameArena;
-import me.abtu.graphics.game.PlayerGraphics;
 import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
@@ -14,6 +15,7 @@ import processing.core.PImage;
 import processing.event.KeyEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public final class Main extends PApplet {
@@ -35,8 +37,7 @@ public final class Main extends PApplet {
     // fonts
     private PFont pixelbit, jersey;
 
-    //graphics
-    private GraphicsBuffer ui, moving, pauseMenu;
+    private final ArrayList<Entity> entities = new ArrayList<>();
     private GameArena arena;
     private PImage cachedArena;
 
@@ -46,6 +47,8 @@ public final class Main extends PApplet {
 
     //gameplay
     private Player[] players;
+    //graphics
+    private GraphicsBuffer ui, entityGraphics, pauseMenu;
 
 
     public void setup() {
@@ -68,8 +71,8 @@ public final class Main extends PApplet {
 
 
         //draw graphics
-        if (moving != null)
-            image(moving.getGraphicsImage(this), 0, 0);
+        if (entityGraphics != null)
+            image(entityGraphics.getGraphicsImage(this), 0, 0);
 
         if (arena != null)
             image(cachedArena, 0, 0);
@@ -99,8 +102,8 @@ public final class Main extends PApplet {
     }
 
     private void gameUpdate() {
-        for (Player player : players)
-            player.update(this);
+        for (Entity entity : new ArrayList<>(entities))
+            entity.update(this);
     }
 
     @SuppressWarnings("unused")
@@ -112,12 +115,14 @@ public final class Main extends PApplet {
     public void startGame(Button button) {
         PlayerMenu playerMenu = (PlayerMenu) ui;
         players = playerMenu.getPlayers(this);
+        Collections.addAll(entities, players);
+
         playerMenu.cleanup(this);
 
         ui = null;
         arena = new GameArena(this, NEAREST_NEIGHBOR);
         cachedArena = arena.getGraphicsImage(this);
-        moving = new PlayerGraphics(this, NEAREST_NEIGHBOR);
+        entityGraphics = new EntityGraphics(this, NEAREST_NEIGHBOR);
         state = State.GAME;
     }
 
@@ -167,8 +172,12 @@ public final class Main extends PApplet {
         return pixelbit;
     }
 
-    public Player[] getPlayers() {
-        return players;
+    public ArrayList<Entity> getEntities() {
+        return entities;
+    }
+
+    public void addEntity(Entity entity) {
+        entities.add(entity);
     }
 
     public float getDeltaTime() {
