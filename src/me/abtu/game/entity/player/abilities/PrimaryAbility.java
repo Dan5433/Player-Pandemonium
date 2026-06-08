@@ -13,7 +13,7 @@ public class PrimaryAbility extends Ability {
         Projectile projectile = new Projectile(player.getX(), player.getY(), 10, 10, 20);
         main.addEntity(projectile);
 
-        cooldownSeconds = 10;
+        cooldownSeconds = 2;
     }
 
 

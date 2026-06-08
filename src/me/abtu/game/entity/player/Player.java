@@ -46,8 +46,8 @@ public class Player extends Entity {
         primary = keybinds[3];
         secondary = keybinds[4];
 
-        x = PApplet.lerp(0, GraphicsBuffer.REFERENCE_WIDTH - width, horizontalFraction);
-        y = GraphicsBuffer.REFERENCE_HEIGHT - height;
+        x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
+        y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
 
         velocity = new PVector(0, 1);
 
@@ -59,7 +59,7 @@ public class Player extends Entity {
     }
 
     public void draw(PGraphics graphics) {
-        graphics.rectMode(PConstants.CORNER);
+        graphics.rectMode(PConstants.CENTER);
         graphics.strokeWeight(0.5f);
         graphics.stroke(0);
         graphics.fill(255, 0, 0);
@@ -72,11 +72,11 @@ public class Player extends Entity {
         updateVelocity(deltaTimeSeconds);
 
         x += velocity.x;
-        x = Math.clamp(x, 0, GraphicsBuffer.REFERENCE_WIDTH - width);
+        x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
 
         float previousY = y;
         y += velocity.y;
-        y = Math.clamp(y, -height, GraphicsBuffer.REFERENCE_HEIGHT - height);
+        y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
 
         platformCheck(main.getArena().getPlatforms(), previousY);
 
@@ -89,11 +89,11 @@ public class Player extends Entity {
 
     private void platformCheck(Platform[] platforms, float previousY) {
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x, x + width, y + height, previousY + height, velocity.y)) {
+            if (platform.canObjectStandOn(x, x + width / 2f, y + height / 2f, previousY + height / 2f, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
-                y = platform.getTopSurfaceY() - height;
+                y = platform.getTopSurfaceY() - height / 2f;
                 return;
             }
         }
@@ -199,7 +199,7 @@ public class Player extends Entity {
     }
 
     private boolean isInAir() {
-        return y < GraphicsBuffer.REFERENCE_HEIGHT - height && !isOnPlatform;
+        return y < GraphicsBuffer.REFERENCE_HEIGHT - height / 2f && !isOnPlatform;
     }
 
     public Consumer<KeyEvent> getKeyPressListener() {
