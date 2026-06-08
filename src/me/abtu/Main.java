@@ -22,8 +22,8 @@ public final class Main extends PApplet {
     }
 
     public void settings() {
+        size(GraphicsBuffer.REFERENCE_WIDTH, GraphicsBuffer.REFERENCE_HEIGHT, P2D);
         fullScreen(P2D);
-//        size(GraphicsBuffer.REFERENCE_WIDTH, GraphicsBuffer.REFERENCE_HEIGHT);
         noSmooth();
     }
 
