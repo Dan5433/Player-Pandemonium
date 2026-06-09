@@ -62,7 +62,7 @@ public class Player extends Entity {
 
     public void draw(PGraphics graphics) {
         graphics.rectMode(PConstants.CENTER);
-        graphics.strokeWeight(0.5f);
+        graphics.strokeWeight(1);
         graphics.stroke(0);
         graphics.fill(255, 0, 0);
         graphics.rect(x, y, width, height);

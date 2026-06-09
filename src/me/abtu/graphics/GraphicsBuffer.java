@@ -3,7 +3,6 @@ package me.abtu.graphics;
 import me.abtu.Main;
 import processing.core.PConstants;
 import processing.core.PGraphics;
-import processing.core.PImage;
 
 public abstract class GraphicsBuffer {
 
@@ -21,10 +20,13 @@ public abstract class GraphicsBuffer {
     protected final float scaleToScreenX;
     protected final float scaleToScreenY;
     protected final int resizeMode;
+
     protected int backgroundColor = 255;
+    private final PGraphics graphics;
+    protected boolean drawBackground = true;
 
 
-    public GraphicsBuffer(Main main, int resizeMode) {
+    public GraphicsBuffer(Main main, int resizeMode, String renderer) {
         this.resizeMode = resizeMode;
         scaleToScreenX = main.width / (float) REFERENCE_WIDTH;
         scaleToScreenY = main.height / (float) REFERENCE_HEIGHT;
@@ -34,26 +36,26 @@ public abstract class GraphicsBuffer {
 
         if (scaleToScreenY % 1 != 0)
             System.out.println("Screen height is not of a common resolution!");
+
+        graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT, renderer);
     }
 
-    public PImage getGraphicsImage(Main main) {
+    public void render(Main main) {
         final float localMouseX = main.mouseX / scaleToScreenX;
         final float localMouseY = main.mouseY / scaleToScreenY;
 
-        PGraphics graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT);
-
         graphics.beginDraw();
-        graphics.background(backgroundColor);
+        graphics.noSmooth();
+        if (drawBackground)
+            graphics.background(backgroundColor);
         graphics.fill(255);
         graphics.stroke(0);
 
         drawBuffer(main, graphics, localMouseX, localMouseY);
         graphics.endDraw();
 
-        PImage image = graphics.get();
-        image.resize(main.width, main.height, resizeMode);
-        image.filter(PConstants.POINT);
-        return image;
+        main.imageMode(PConstants.CORNER);
+        main.image(graphics, 0, 0, main.width, main.height);
     }
 
     protected abstract void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY);

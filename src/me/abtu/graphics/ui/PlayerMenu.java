@@ -22,8 +22,8 @@ public class PlayerMenu extends GraphicsBuffer {
 
     private final Main main;
 
-    public PlayerMenu(Main main, int resizeMode) {
-        super(main, resizeMode);
+    public PlayerMenu(Main main, int resizeMode, String renderer) {
+        super(main, resizeMode, renderer);
         this.main = main;
 
         playerCards.add(new PlayerCard(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,

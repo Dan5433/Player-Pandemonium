@@ -11,7 +11,6 @@ import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
-import processing.core.PImage;
 import processing.event.KeyEvent;
 
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ public final class Main extends PApplet {
 
     private final ArrayList<Entity> entities = new ArrayList<>();
     private GameArena arena;
-    private PImage cachedArena;
 
     //control values
     private State state = State.MENU;
@@ -58,8 +56,8 @@ public final class Main extends PApplet {
     }
 
     private void initializeGraphics() {
-        ui = new TitleScreen(this, NEAREST_NEIGHBOR);
-        pauseMenu = new PauseMenu(this, NEAREST_NEIGHBOR);
+        ui = new TitleScreen(this, NEAREST_NEIGHBOR, JAVA2D);
+        pauseMenu = new PauseMenu(this, NEAREST_NEIGHBOR, JAVA2D);
     }
 
     public void draw() {
@@ -71,17 +69,16 @@ public final class Main extends PApplet {
 
 
         //draw graphics
-        if (entityGraphics != null)
-            image(entityGraphics.getGraphicsImage(this), 0, 0);
+        if (entityGraphics != null) entityGraphics.render(this);
 
         if (arena != null)
-            image(cachedArena, 0, 0);
+            arena.render(this);
 
         if (ui != null)
-            image(ui.getGraphicsImage(this), 0, 0);
+            ui.render(this);
 
         if (state == State.PAUSED)
-            image(pauseMenu.getGraphicsImage(this), 0, 0);
+            pauseMenu.render(this);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -108,7 +105,7 @@ public final class Main extends PApplet {
 
     @SuppressWarnings("unused")
     public void openPlayerMenu(Button button) {
-        ui = new PlayerMenu(this, NEAREST_NEIGHBOR);
+        ui = new PlayerMenu(this, NEAREST_NEIGHBOR, JAVA2D);
     }
 
     @SuppressWarnings("unused")
@@ -120,9 +117,8 @@ public final class Main extends PApplet {
         playerMenu.cleanup(this);
 
         ui = null;
-        arena = new GameArena(this, NEAREST_NEIGHBOR);
-        cachedArena = arena.getGraphicsImage(this);
-        entityGraphics = new EntityGraphics(this, NEAREST_NEIGHBOR);
+        arena = new GameArena(this, NEAREST_NEIGHBOR, JAVA2D);
+        entityGraphics = new EntityGraphics(this, NEAREST_NEIGHBOR, JAVA2D);
         state = State.GAME;
     }
 
@@ -141,7 +137,7 @@ public final class Main extends PApplet {
 
         entities.clear();
 
-        ui = new TitleScreen(this, NEAREST_NEIGHBOR);
+        ui = new TitleScreen(this, NEAREST_NEIGHBOR, JAVA2D);
         state = State.MENU;
     }
 

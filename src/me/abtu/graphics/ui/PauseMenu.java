@@ -9,8 +9,8 @@ import processing.core.PGraphics;
 public class PauseMenu extends GraphicsBuffer {
     private final Button resumeButton, titleScreenButton;
 
-    public PauseMenu(Main main, int resizeMode) {
-        super(main, resizeMode);
+    public PauseMenu(Main main, int resizeMode, String renderer) {
+        super(main, resizeMode, renderer);
 
         backgroundColor = 0xAA000000;
 

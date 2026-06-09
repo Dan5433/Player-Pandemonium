@@ -7,8 +7,8 @@ import processing.core.PGraphics;
 
 public class EntityGraphics extends GraphicsBuffer {
 
-    public EntityGraphics(Main main, int resizeMode) {
-        super(main, resizeMode);
+    public EntityGraphics(Main main, int resizeMode, String renderer) {
+        super(main, resizeMode, renderer);
     }
 
     @Override
