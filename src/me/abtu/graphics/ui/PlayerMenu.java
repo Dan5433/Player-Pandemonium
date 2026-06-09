@@ -2,7 +2,7 @@ package me.abtu.graphics.ui;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
-import me.abtu.game.Player;
+import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
 import processing.core.PConstants;
