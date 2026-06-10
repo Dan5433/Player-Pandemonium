@@ -8,6 +8,7 @@ import me.abtu.graphics.game.EntityGraphics;
 import me.abtu.graphics.game.GameArena;
 import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
+import me.abtu.graphics.ui.PlayerStats;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -56,8 +57,8 @@ public final class Main extends PApplet {
     }
 
     private void initializeGraphics() {
-        ui = new TitleScreen(this, NEAREST_NEIGHBOR, JAVA2D);
-        pauseMenu = new PauseMenu(this, NEAREST_NEIGHBOR, JAVA2D);
+        ui = new TitleScreen(this, JAVA2D);
+        pauseMenu = new PauseMenu(this, JAVA2D);
     }
 
     public void draw() {
@@ -106,7 +107,7 @@ public final class Main extends PApplet {
 
     @SuppressWarnings("unused")
     public void openPlayerMenu(Button button) {
-        ui = new PlayerMenu(this, NEAREST_NEIGHBOR, JAVA2D);
+        ui = new PlayerMenu(this, JAVA2D);
     }
 
     @SuppressWarnings("unused")
@@ -117,9 +118,9 @@ public final class Main extends PApplet {
 
         playerMenu.cleanup(this);
 
-        ui = null;
-        arena = new GameArena(this, NEAREST_NEIGHBOR, JAVA2D);
-        entityGraphics = new EntityGraphics(this, NEAREST_NEIGHBOR, JAVA2D);
+        ui = new PlayerStats(this, JAVA2D);
+        arena = new GameArena(this, JAVA2D);
+        entityGraphics = new EntityGraphics(this, JAVA2D);
         state = State.GAME;
     }
 
@@ -138,7 +139,7 @@ public final class Main extends PApplet {
 
         entities.clear();
 
-        ui = new TitleScreen(this, NEAREST_NEIGHBOR, JAVA2D);
+        ui = new TitleScreen(this, JAVA2D);
         state = State.MENU;
     }
 

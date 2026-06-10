@@ -10,8 +10,8 @@ import processing.core.PGraphics;
 public class TitleScreen extends GraphicsBuffer {
     protected final Button playButton;
 
-    public TitleScreen(Main main, int resizeMode, String renderer) {
-        super(main, resizeMode, renderer);
+    public TitleScreen(Main main, String renderer) {
+        super(main, renderer);
 
         final float width = REFERENCE_WIDTH / 4f;
         final float height = REFERENCE_HEIGHT / 12f;

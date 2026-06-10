@@ -8,8 +8,8 @@ import processing.core.PGraphics;
 public class GameArena extends GraphicsBuffer {
     protected Platform[] platforms;
 
-    public GameArena(Main main, int resizeMode, String renderer) {
-        super(main, resizeMode, renderer);
+    public GameArena(Main main, String renderer) {
+        super(main, renderer);
 
         final float centerPlatformWidth = REFERENCE_WIDTH / 5f;
         final float smallPlatformWidth = REFERENCE_WIDTH / 8f;
