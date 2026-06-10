@@ -32,15 +32,24 @@ public class PlayerHealth extends GraphicsBuffer {
             final float horizontalFraction = (float) i / (players.length - 1);
             final float x = PApplet.lerp(margin, REFERENCE_WIDTH - margin - statWidth, horizontalFraction);
 
+            //draw black bar background
             graphics.fill(0);
             graphics.strokeWeight(3);
             graphics.stroke(0);
             graphics.rect(x, overlayHeight / 2f - statHeight / 2f, statWidth, statHeight);
 
+            //draw green health bar
             final float healthFraction = player.getHealth() / player.getMaxHealth();
-            final float width = PApplet.lerp(0, statWidth, Math.clamp(healthFraction, 0, 1));
+            final float healthBarWidth = PApplet.lerp(0, statWidth, Math.clamp(healthFraction, 0, 1));
             graphics.fill(Color.GREEN.hex());
-            graphics.rect(x, overlayHeight / 2f - statHeight / 2f, width, statHeight);
+            graphics.rect(x, overlayHeight / 2f - statHeight / 2f, healthBarWidth, statHeight);
+
+            //draw player index
+            graphics.fill(255);
+            graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
+            graphics.textFont(main.getDefaultFont());
+            graphics.textSize(SMALL_TEXT_SIZE);
+            graphics.text("P" + (i + 1), x + statWidth / 2f, overlayHeight / 2f);
         }
     }
 }
