@@ -3,6 +3,7 @@ package me.abtu.graphics.game;
 import me.abtu.Main;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.util.Color;
 import processing.core.PGraphics;
 
 public class GameArena extends GraphicsBuffer {
@@ -14,7 +15,7 @@ public class GameArena extends GraphicsBuffer {
         final float centerPlatformWidth = REFERENCE_WIDTH / 5f;
         final float smallPlatformWidth = REFERENCE_WIDTH / 8f;
         final float platformHeight = REFERENCE_HEIGHT / 20f;
-        final int cyan = 0xFF00F0F0;
+        final int cyan = Color.CYAN.hex();
         platforms = new Platform[]{
                 //lowest middle platform
                 new Platform(HALF_WIDTH, REFERENCE_HEIGHT - REFERENCE_HEIGHT / 10f, centerPlatformWidth, platformHeight, cyan),

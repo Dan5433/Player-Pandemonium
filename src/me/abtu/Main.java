@@ -7,8 +7,8 @@ import me.abtu.graphics.buttons.Button;
 import me.abtu.graphics.game.EntityGraphics;
 import me.abtu.graphics.game.GameArena;
 import me.abtu.graphics.ui.PauseMenu;
+import me.abtu.graphics.ui.PlayerHealth;
 import me.abtu.graphics.ui.PlayerMenu;
-import me.abtu.graphics.ui.PlayerStats;
 import me.abtu.graphics.ui.TitleScreen;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -118,7 +118,7 @@ public final class Main extends PApplet {
 
         playerMenu.cleanup(this);
 
-        ui = new PlayerStats(this, JAVA2D);
+        ui = new PlayerHealth(this, JAVA2D);
         arena = new GameArena(this, JAVA2D);
         entityGraphics = new EntityGraphics(this, JAVA2D);
         state = State.GAME;
