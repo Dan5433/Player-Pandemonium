@@ -40,9 +40,9 @@ public class TitleScreen extends GraphicsBuffer {
 
         graphics.textSize(SMALL_TEXT_SIZE);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);
-        graphics.text(AppConfig.VERSION, padding, graphics.height - padding);
+        graphics.text(AppConfig.VERSION, padding, REFERENCE_HEIGHT - padding);
 
         graphics.textAlign(PConstants.RIGHT, PConstants.BOTTOM);
-        graphics.text(AppConfig.COPYRIGHT, graphics.width - padding, graphics.height - padding);
+        graphics.text(AppConfig.COPYRIGHT, REFERENCE_WIDTH - padding, REFERENCE_HEIGHT - padding);
     }
 }

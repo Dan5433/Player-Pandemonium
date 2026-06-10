@@ -69,7 +69,8 @@ public final class Main extends PApplet {
 
 
         //draw graphics
-        if (entityGraphics != null) entityGraphics.render(this);
+        if (entityGraphics != null)
+            entityGraphics.render(this);
 
         if (arena != null)
             arena.render(this);

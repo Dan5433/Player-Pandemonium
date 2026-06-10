@@ -37,7 +37,7 @@ public abstract class GraphicsBuffer {
         if (scaleToScreenY % 1 != 0)
             System.out.println("Screen height is not of a common resolution!");
 
-        graphics = main.createGraphics(REFERENCE_WIDTH, REFERENCE_HEIGHT, renderer);
+        graphics = main.createGraphics(main.width, main.height, renderer);
     }
 
     public void render(Main main) {
@@ -45,7 +45,7 @@ public abstract class GraphicsBuffer {
         final float localMouseY = main.mouseY / scaleToScreenY;
 
         graphics.beginDraw();
-        graphics.noSmooth();
+        graphics.scale(scaleToScreenX, scaleToScreenY);
         if (drawBackground)
             graphics.background(backgroundColor);
         graphics.fill(255);
