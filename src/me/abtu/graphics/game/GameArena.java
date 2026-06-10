@@ -8,8 +8,8 @@ import processing.core.PGraphics;
 public class GameArena extends GraphicsBuffer {
     protected Platform[] platforms;
 
-    public GameArena(Main main, int resizeMode) {
-        super(main, resizeMode);
+    public GameArena(Main main, int resizeMode, String renderer) {
+        super(main, resizeMode, renderer);
 
         final float centerPlatformWidth = REFERENCE_WIDTH / 5f;
         final float smallPlatformWidth = REFERENCE_WIDTH / 8f;
@@ -31,7 +31,7 @@ public class GameArena extends GraphicsBuffer {
                 new Platform(REFERENCE_WIDTH * 7f / 10f, HALF_HEIGHT - FIFTH_HEIGHT, smallPlatformWidth, platformHeight, cyan),
         };
 
-        backgroundColor = 0x00FFFFFF;
+        drawBackground = false;
     }
 
 

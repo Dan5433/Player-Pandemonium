@@ -38,7 +38,7 @@ public class Projectile extends Entity {
 
     public void draw(PGraphics graphics) {
         graphics.fill(RED);
-        graphics.strokeWeight(0.25f);
+        graphics.noStroke();
         graphics.ellipseMode(PConstants.CENTER);
         graphics.ellipse(x, y, width, height);
     }

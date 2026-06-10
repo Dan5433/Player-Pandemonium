@@ -10,8 +10,8 @@ import processing.core.PGraphics;
 public class TitleScreen extends GraphicsBuffer {
     protected final Button playButton;
 
-    public TitleScreen(Main main, int resizeMode) {
-        super(main, resizeMode);
+    public TitleScreen(Main main, int resizeMode, String renderer) {
+        super(main, resizeMode, renderer);
 
         final float width = REFERENCE_WIDTH / 4f;
         final float height = REFERENCE_HEIGHT / 12f;
@@ -40,9 +40,9 @@ public class TitleScreen extends GraphicsBuffer {
 
         graphics.textSize(SMALL_TEXT_SIZE);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);
-        graphics.text(AppConfig.VERSION, padding, graphics.height - padding);
+        graphics.text(AppConfig.VERSION, padding, REFERENCE_HEIGHT - padding);
 
         graphics.textAlign(PConstants.RIGHT, PConstants.BOTTOM);
-        graphics.text(AppConfig.COPYRIGHT, graphics.width - padding, graphics.height - padding);
+        graphics.text(AppConfig.COPYRIGHT, REFERENCE_WIDTH - padding, REFERENCE_HEIGHT - padding);
     }
 }
