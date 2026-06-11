@@ -93,7 +93,7 @@ public class Player extends Entity {
 
     private void platformCheck(Platform[] platforms) {
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x, x + width / 2f, y + height / 2f, previousFrameY + height / 2f, velocity.y)) {
+            if (platform.canObjectStandOn(x - width / 2f, x + width / 2f, y + height / 2f, previousFrameY + height / 2f, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
