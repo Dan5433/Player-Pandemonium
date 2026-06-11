@@ -2,7 +2,7 @@ package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
-import me.abtu.game.entity.Entity;
+import me.abtu.game.entity.PhysicsEntity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.entity.player.abilities.SecondaryAbility;
@@ -17,16 +17,12 @@ import processing.core.PVector;
 import java.util.function.Consumer;
 
 
-public class Player extends Entity {
+public class Player extends PhysicsEntity {
     //unscaled
-    protected static final float MAX_HORIZONTAL_VELOCITY = 5.5f;
-    protected static final float TERMINAL_VELOCITY = 10f;
     protected static final float JUMP_FORCE = 12.5f;
     protected static final int COYOTE_FRAMES = 5;
     //scaled for delta time
     protected static final float ACCELERATION = 12.5f;
-    protected static final float FRICTION = 7.5f;
-    protected static final float GRAVITY = 0.75f;
 
     protected final int left, right, jump, primary, secondary;
 
@@ -73,14 +69,7 @@ public class Player extends Entity {
 
     @Override
     public void updateInternal(Main main) {
-        float deltaTimeSeconds = main.getDeltaTime() / 1000f;
-
-        updateVelocity(deltaTimeSeconds);
-
-        x += velocity.x;
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
-
-        y += velocity.y;
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
 
         platformCheck(main.getArena().getPlatforms());
@@ -89,6 +78,7 @@ public class Player extends Entity {
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
 
+        final float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         updateAbilities(main, deltaTimeSeconds);
     }
 
@@ -117,31 +107,17 @@ public class Player extends Entity {
             secondaryAbility.tryUseAbility(this, main);
     }
 
-    private void updateVelocity(float deltaTimeSeconds) {
-        //update x velocity
-        if (xInput != 0)
+    @Override
+    protected void updateVelocity(float deltaTimeSeconds) {
+        //move player on input
+        if (!shouldApplyFriction())
             velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
-        else {
-            float frictionFactor = 1 - FRICTION * deltaTimeSeconds;
-            frictionFactor = Math.clamp(frictionFactor, 0, 1); //ensure friction doesnt cause velocity to invert on high delta time values
-            velocity.x *= frictionFactor;
 
-            //set velocity to 0 if very small
-            if (Math.abs(velocity.x) < 0.01f)
-                velocity.x = 0;
-        }
-        velocity.x = Math.clamp(velocity.x, -MAX_HORIZONTAL_VELOCITY, MAX_HORIZONTAL_VELOCITY);
+        super.updateVelocity(deltaTimeSeconds);
 
-        //update y velocity
-        if (isInAir() && coyoteFrames <= 0) {
-            velocity.y += 1 + GRAVITY * deltaTimeSeconds;
-        } else {
-            velocity.y = 0;
-
-            if (jumpKeyDown)
-                jump();
-        }
-        velocity.y = Math.clamp(velocity.y, -JUMP_FORCE, TERMINAL_VELOCITY);
+        //jump if not in air
+        if (jumpKeyDown && !isInAir())
+            jump();
     }
 
     private void keyPressed(KeyEvent event) {
@@ -209,8 +185,14 @@ public class Player extends Entity {
         main.removeKeyReleaseEventListener(keyReleaseListener);
     }
 
-    private boolean isInAir() {
-        return y < GraphicsBuffer.REFERENCE_HEIGHT - height / 2f && !isOnPlatform;
+    @Override
+    protected boolean isInAir() {
+        return y < GraphicsBuffer.REFERENCE_HEIGHT - height / 2f && !isOnPlatform && coyoteFrames <= 0;
+    }
+
+    @Override
+    protected boolean shouldApplyFriction() {
+        return xInput == 0;
     }
 
     public Consumer<KeyEvent> getKeyPressListener() {
