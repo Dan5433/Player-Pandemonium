@@ -5,6 +5,7 @@ import me.abtu.Main;
 import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
+import me.abtu.game.entity.player.abilities.SecondaryAbility;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.util.Color;
@@ -59,7 +60,7 @@ public class Player extends Entity {
         keyReleaseListener = this::keyReleased;
 
         primaryAbility = new PrimaryAbility();
-        secondaryAbility = null;
+        secondaryAbility = new SecondaryAbility();
     }
 
     public void draw(PGraphics graphics) {
@@ -107,9 +108,13 @@ public class Player extends Entity {
 
     private void updateAbilities(Main main, float deltaTimeSeconds) {
         primaryAbility.update(deltaTimeSeconds);
+        secondaryAbility.update(deltaTimeSeconds);
 
         if (primaryKeyDown)
             primaryAbility.tryUseAbility(this, main);
+
+        if (secondaryKeyDown)
+            secondaryAbility.tryUseAbility(this, main);
     }
 
     private void updateVelocity(float deltaTimeSeconds) {
