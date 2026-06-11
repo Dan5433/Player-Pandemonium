@@ -51,6 +51,7 @@ public final class Main extends PApplet {
 
 
     public void setup() {
+//        frameRate(5);
         loadFonts();
 
         initializeGraphics();

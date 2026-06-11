@@ -70,7 +70,8 @@ public class Player extends Entity {
         graphics.rect(x, y, width, height);
     }
 
-    public void update(Main main) {
+    @Override
+    public void updateInternal(Main main) {
         float deltaTimeSeconds = main.getDeltaTime() / 1000f;
 
         updateVelocity(deltaTimeSeconds);
@@ -78,11 +79,10 @@ public class Player extends Entity {
         x += velocity.x;
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
 
-        float previousY = y;
         y += velocity.y;
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
 
-        platformCheck(main.getArena().getPlatforms(), previousY);
+        platformCheck(main.getArena().getPlatforms());
 
         coyoteFrames--;
         if (isOnPlatform)
@@ -91,9 +91,9 @@ public class Player extends Entity {
         updateAbilities(main, deltaTimeSeconds);
     }
 
-    private void platformCheck(Platform[] platforms, float previousY) {
+    private void platformCheck(Platform[] platforms) {
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x, x + width / 2f, y + height / 2f, previousY + height / 2f, velocity.y)) {
+            if (platform.canObjectStandOn(x - width / 2f, x + width / 2f, y + height / 2f, previousFrameY + height / 2f, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
