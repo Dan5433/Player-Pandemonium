@@ -2,7 +2,7 @@ package me.abtu.game.entity.player.abilities;
 
 import me.abtu.Main;
 import me.abtu.game.entity.player.Player;
-import me.abtu.game.entity.projectile.Projectile;
+import me.abtu.game.entity.projectile.PhysicsProjectile;
 import processing.core.PVector;
 
 public class SecondaryAbility extends Ability {
@@ -15,11 +15,10 @@ public class SecondaryAbility extends Ability {
         final int projectileSize = 20;
         int xOffset = xDirection * projectileSize;
 
-        final float projectileSpeed = 475.5f;
-        final PVector projectileVelocity = new PVector(xDirection, -1).mult(projectileSpeed);
+        final PVector projectileVelocity = new PVector(xDirection * 1450.5f, -20f);
         final int projectileDamage = 25;
 
-        Projectile projectile = new Projectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
+        PhysicsProjectile projectile = new PhysicsProjectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
                 projectileDamage, projectileVelocity, player);
         main.addEntity(projectile);
 

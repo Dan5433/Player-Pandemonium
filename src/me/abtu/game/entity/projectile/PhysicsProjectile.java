@@ -9,4 +9,9 @@ public class PhysicsProjectile extends Projectile {
 
         gravity = 0.5f;
     }
+
+    @Override
+    protected boolean isInAir() {
+        return true;
+    }
 }
