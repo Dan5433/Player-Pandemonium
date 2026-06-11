@@ -22,6 +22,6 @@ public class SecondaryAbility extends Ability {
                 projectileDamage, projectileVelocity, player);
         main.addEntity(projectile);
 
-        cooldownSeconds = 2.5f;
+        cooldownSeconds = 1.25f;
     }
 }
