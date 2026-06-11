@@ -8,7 +8,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 
 public class TitleScreen extends GraphicsBuffer {
-    protected final Button playButton;
+    protected final Button playButton, quitButton;
 
     public TitleScreen(Main main, String renderer) {
         super(main, renderer);
@@ -19,11 +19,17 @@ public class TitleScreen extends GraphicsBuffer {
                 .text("Play")
                 .hoverExpand(2)
                 .build();
+
+        quitButton = new Button.Builder(HALF_WIDTH, HALF_HEIGHT + height * 2, width, height, PConstants.CENTER, main::quit)
+                .text("Quit")
+                .hoverExpand(2)
+                .build();
     }
 
     @Override
     protected void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY) {
         playButton.update(mouseX, mouseY, main.mousePressed);
+        quitButton.update(mouseX, mouseY, main.mousePressed);
 
         final int padding = 2;
         graphics.fill(0);
@@ -37,6 +43,7 @@ public class TitleScreen extends GraphicsBuffer {
         graphics.textFont(main.getDefaultFont());
         graphics.textSize(BUTTON_TEXT_SIZE);
         playButton.draw(graphics);
+        quitButton.draw(graphics);
 
         graphics.textSize(SMALL_TEXT_SIZE);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);

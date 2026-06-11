@@ -106,6 +106,11 @@ public final class Main extends PApplet {
     }
 
     @SuppressWarnings("unused")
+    public void quit(Button button) {
+        System.exit(0);
+    }
+
+    @SuppressWarnings("unused")
     public void openPlayerMenu(Button button) {
         ui = new PlayerMenu(this, JAVA2D);
     }
