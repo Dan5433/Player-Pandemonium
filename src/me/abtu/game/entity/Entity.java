@@ -37,4 +37,12 @@ public abstract class Entity {
     public float getY() {
         return y;
     }
+
+    public float getPreviousFrameX() {
+        return previousFrameX;
+    }
+
+    public float getPreviousFrameY() {
+        return previousFrameY;
+    }
 }

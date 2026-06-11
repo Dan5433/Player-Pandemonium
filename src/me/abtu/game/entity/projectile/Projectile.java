@@ -44,20 +44,23 @@ public class Projectile extends Entity {
     }
 
     private void dealDamageToPlayers(Player[] players, Main main) {
-        float topEdge = y - height / 2f;
-        float bottomEdge = y + height / 2f;
-        float leftEdge = x + width / 2f;
-        float rightEdge = x - width / 2f;
+        final float topEdge = y - height / 2f;
+        final float bottomEdge = y + height / 2f;
+        final float leftEdge = x + width / 2f;
+        final float rightEdge = x - width / 2f;
+        final float leftEdgePrevious = previousFrameX + width / 2f;
+        final float rightEdgePrevious = previousFrameX - width / 2f;
         for (Player player : players) {
             if (player == owner) //prevent player who shot projectile being hit
                 continue;
 
             PVector playerTopLeft = player.getTopLeftEdge();
             PVector playerBottomRight = player.getBottomRightEdge();
+            final float playerPreviousX = player.getPreviousFrameX();
 
-            boolean withinPlayerY = bottomEdge >= playerTopLeft.y && topEdge <= playerBottomRight.y;
-            boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && leftEdge <= playerBottomRight.x;
-            boolean hitPlayerRight = leftEdge <= playerBottomRight.x && rightEdge >= playerBottomRight.x;
+            final boolean withinPlayerY = bottomEdge >= playerTopLeft.y && topEdge <= playerBottomRight.y;
+            final boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && leftEdgePrevious <= playerPreviousX;
+            final boolean hitPlayerRight = leftEdge <= playerBottomRight.x && rightEdgePrevious >= playerPreviousX;
 
             if (withinPlayerY && (hitPlayerLeft || hitPlayerRight)) {
                 player.dealDamage(damage);
