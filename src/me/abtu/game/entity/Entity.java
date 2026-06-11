@@ -8,6 +8,7 @@ public abstract class Entity {
     protected final float width;
     protected final float height;
 
+    protected float previousFrameX, previousFrameY;
     protected float x, y;
     protected PVector velocity;
 
@@ -19,7 +20,13 @@ public abstract class Entity {
         this.velocity = new PVector(0, 0);
     }
 
-    public abstract void update(Main main);
+    public void update(Main main) {
+        previousFrameX = x;
+        previousFrameY = y;
+        updateInternal(main);
+    }
+
+    protected abstract void updateInternal(Main main);
 
     public abstract void draw(PGraphics graphics);
 

@@ -22,7 +22,7 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void update(Main main) {
+    public void updateInternal(Main main) {
         float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         x += velocity.x * deltaTimeSeconds;
         y += velocity.y * deltaTimeSeconds;
