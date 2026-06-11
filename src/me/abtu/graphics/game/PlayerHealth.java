@@ -1,4 +1,4 @@
-package me.abtu.graphics.ui;
+package me.abtu.graphics.game;
 
 import me.abtu.Main;
 import me.abtu.game.entity.player.Player;
@@ -49,7 +49,7 @@ public class PlayerHealth extends GraphicsBuffer {
             graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
             graphics.textFont(main.getDefaultFont());
             graphics.textSize(SMALL_TEXT_SIZE);
-            graphics.text("P" + (i + 1), x + statWidth / 2f, overlayHeight / 2f);
+            graphics.text("Player " + (i + 1), x + statWidth / 2f, overlayHeight / 2f);
         }
     }
 }
