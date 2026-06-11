@@ -17,7 +17,7 @@ public class PrimaryAbility extends Ability {
 
         final float projectileSpeed = 475.5f;
         final PVector projectileVelocity = new PVector(xDirection, 0).mult(projectileSpeed);
-        final int projectileDamage = 20;
+        final int projectileDamage = 5;
 
         Projectile projectile = new Projectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
                 projectileDamage, projectileVelocity, player);
