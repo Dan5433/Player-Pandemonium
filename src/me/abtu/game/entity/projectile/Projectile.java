@@ -4,12 +4,12 @@ import me.abtu.Main;
 import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.util.Color;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
 public class Projectile extends Entity {
-    private static final int RED = 0xFF_F0_00_00;
     protected final float damage;
     protected final Player owner;
 
@@ -37,7 +37,7 @@ public class Projectile extends Entity {
     }
 
     public void draw(PGraphics graphics) {
-        graphics.fill(RED);
+        graphics.fill(Color.RED.hex());
         graphics.noStroke();
         graphics.ellipseMode(PConstants.CENTER);
         graphics.ellipse(x, y, width, height);

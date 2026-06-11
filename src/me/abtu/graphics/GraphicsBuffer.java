@@ -19,15 +19,13 @@ public abstract class GraphicsBuffer {
 
     protected final float scaleToScreenX;
     protected final float scaleToScreenY;
-    protected final int resizeMode;
 
     protected int backgroundColor = 255;
     private final PGraphics graphics;
     protected boolean drawBackground = true;
 
 
-    public GraphicsBuffer(Main main, int resizeMode, String renderer) {
-        this.resizeMode = resizeMode;
+    public GraphicsBuffer(Main main, String renderer) {
         scaleToScreenX = main.width / (float) REFERENCE_WIDTH;
         scaleToScreenY = main.height / (float) REFERENCE_HEIGHT;
 
@@ -45,7 +43,9 @@ public abstract class GraphicsBuffer {
         final float localMouseY = main.mouseY / scaleToScreenY;
 
         graphics.beginDraw();
+        graphics.clear();
         graphics.scale(scaleToScreenX, scaleToScreenY);
+
         if (drawBackground)
             graphics.background(backgroundColor);
         graphics.fill(255);

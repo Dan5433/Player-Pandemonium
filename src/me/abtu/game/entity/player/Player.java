@@ -7,6 +7,7 @@ import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.util.Color;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -37,7 +38,8 @@ public class Player extends Entity {
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
     protected boolean leftKeyDown, rightKeyDown, jumpKeyDown, primaryKeyDown, secondaryKeyDown;
 
-    protected float health = 100f;
+    protected float maxHealth = 100f;
+    protected float health = maxHealth;
 
 
     public Player(int[] keybinds, float horizontalFraction) {
@@ -64,7 +66,7 @@ public class Player extends Entity {
         graphics.rectMode(PConstants.CENTER);
         graphics.strokeWeight(1);
         graphics.stroke(0);
-        graphics.fill(255, 0, 0);
+        graphics.fill(Color.RED.hex());
         graphics.rect(x, y, width, height);
     }
 
@@ -230,5 +232,13 @@ public class Player extends Entity {
         health -= damage;
         if (health <= 0)
             System.out.println("Dead");
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
     }
 }
