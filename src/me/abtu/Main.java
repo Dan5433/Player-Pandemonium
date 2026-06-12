@@ -251,4 +251,8 @@ public final class Main extends PApplet {
     public GameArena getArena() {
         return arena;
     }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
 }

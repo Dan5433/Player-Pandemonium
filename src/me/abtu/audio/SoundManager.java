@@ -8,7 +8,7 @@ public class SoundManager {
     public final SoundFile fireball;
 
     public SoundManager(PApplet app) {
-        throwing = new SoundFile(app, "throw.wav");
-        fireball = new SoundFile(app, "fireball.wav");
+        throwing = new SoundFile(app, "sfx/abilities/throw.wav");
+        fireball = new SoundFile(app, "sfx/abilities/fireball.wav");
     }
 }

@@ -2,6 +2,7 @@ package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
+import me.abtu.audio.SoundManager;
 import me.abtu.game.entity.PhysicsEntity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
@@ -40,7 +41,7 @@ public class Player extends PhysicsEntity {
     protected final Runnable deathEventListener;
 
 
-    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener) {
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, Main main) {
         super(0, 0, 20, 50);
         left = keybinds[0];
         right = keybinds[1];
@@ -56,8 +57,9 @@ public class Player extends PhysicsEntity {
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
 
-        primaryAbility = new PrimaryAbility();
-        secondaryAbility = new SecondaryAbility();
+        SoundManager soundManager = main.getSoundManager();
+        primaryAbility = new PrimaryAbility(soundManager.throwing);
+        secondaryAbility = new SecondaryAbility(soundManager.fireball);
 
         this.deathEventListener = deathEventListener;
     }
