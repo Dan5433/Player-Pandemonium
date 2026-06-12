@@ -172,6 +172,7 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private void updateStartButtonState() {
+        //check if all keybinds are bound; disable start button if not
         for (PlayerCard playerCard : playerCards) {
             for (int keybind : playerCard.getKeybinds()) {
                 if (keybind == 0) {

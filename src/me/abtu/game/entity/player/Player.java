@@ -231,4 +231,11 @@ public class Player extends PhysicsEntity {
     public float getMaxHealth() {
         return maxHealth;
     }
+
+    public void resetForRematch(float horizontalFraction) {
+        health = maxHealth;
+
+        x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
+        y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
+    }
 }

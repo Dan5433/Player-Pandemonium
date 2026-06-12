@@ -153,6 +153,16 @@ public final class Main extends PApplet {
         state = State.MENU;
     }
 
+    @SuppressWarnings("unused")
+    public void rematch(Button button) {
+        for (int i = 0; i < players.length; i++) {
+            float horizontalFraction = (float) i / (players.length - 1);
+            players[i].resetForRematch(horizontalFraction);
+        }
+
+        state = State.GAME;
+    }
+
     public void addKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
         keyPressEventListeners.add(listener);
     }
