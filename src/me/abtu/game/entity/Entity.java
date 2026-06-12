@@ -21,9 +21,16 @@ public abstract class Entity {
     }
 
     public void update(Main main) {
+        if (!shouldUpdate())
+            return;
+        
         previousFrameX = x;
         previousFrameY = y;
         updateInternal(main);
+    }
+
+    protected boolean shouldUpdate() {
+        return true;
     }
 
     protected abstract void updateInternal(Main main);
