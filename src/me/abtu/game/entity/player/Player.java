@@ -72,6 +72,7 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
+        //TODO: dont draw or update when dead
         //dont let players go off screen
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);

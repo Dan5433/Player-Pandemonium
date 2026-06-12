@@ -7,7 +7,7 @@ public abstract class Ability {
     protected float cooldownSeconds;
 
     public void tryUseAbility(Player player, Main main) {
-        if (cooldownSeconds > 0)
+        if (cooldownSeconds > 0) //dont use ability if on cooldown
             return;
 
         useAbility(player, main);
@@ -16,6 +16,6 @@ public abstract class Ability {
     public abstract void useAbility(Player player, Main main);
 
     public void update(float deltaTimeSeconds) {
-        cooldownSeconds -= deltaTimeSeconds;
+        cooldownSeconds -= deltaTimeSeconds; //subtract seconds passed from cooldown
     }
 }
