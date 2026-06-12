@@ -33,6 +33,7 @@ public abstract class PhysicsEntity extends Entity {
     protected void updateVelocity(float deltaTimeSeconds) {
         //update x velocity
         if (shouldApplyFriction()) {
+            //apply delta time scaled friction
             float frictionFactor = 1 - friction * deltaTimeSeconds;
             frictionFactor = Math.clamp(frictionFactor, 0, 1); //ensure friction doesnt cause velocity to invert on high delta time values
             velocity.x *= frictionFactor;
@@ -42,15 +43,18 @@ public abstract class PhysicsEntity extends Entity {
                 velocity.x = 0;
         }
 
+        //clamp velocity to maximum speed
         velocity.x = Math.clamp(velocity.x, -maxHorizontalVelocity, maxHorizontalVelocity);
 
         //update y velocity
         if (isInAir())
+            //apply delta time scaled gravity if in air
             velocity.y += 1 + gravity * deltaTimeSeconds;
         else
-            velocity.y = 0;
+            velocity.y = 0; //reset y velocity if not in air
 
 
+        //clamp gravity velocity
         if (velocity.y > terminalVelocity)
             velocity.y = terminalVelocity;
     }
