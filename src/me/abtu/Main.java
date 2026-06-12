@@ -155,6 +155,7 @@ public final class Main extends PApplet {
 
     @SuppressWarnings("unused")
     public void rematch(Button button) {
+        //TODO: fix previous match entities from leaking into next
         for (int i = 0; i < players.length; i++) {
             float horizontalFraction = (float) i / (players.length - 1);
             players[i].resetForRematch(horizontalFraction);

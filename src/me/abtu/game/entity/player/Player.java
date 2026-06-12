@@ -27,9 +27,9 @@ public class Player extends PhysicsEntity {
     protected final int left, right, jump, primary, secondary;
 
     protected boolean isOnPlatform = false;
-    protected int coyoteFrames = COYOTE_FRAMES;
+    protected int coyoteFrames = COYOTE_FRAMES; //small numbers of frames to let players jump slightly after they are already in air
 
-    protected int xInput, lastXInput;
+    protected int xInput, lastXInput; //last x input is the last non-zero input; determines which way player is facing
     protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
@@ -48,10 +48,10 @@ public class Player extends PhysicsEntity {
         primary = keybinds[3];
         secondary = keybinds[4];
 
+        //spread out players at the bottom of the screen
+        //horizontal fraction depends on each player's number/index
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
-
-        velocity = new PVector(0, 1);
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
@@ -72,11 +72,14 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
+        //TODO: dont draw or update when dead
+        //dont let players go off screen
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
 
         platformCheck(main.getArena().getPlatforms());
 
+        //update coyote time
         coyoteFrames--;
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
@@ -86,8 +89,15 @@ public class Player extends PhysicsEntity {
     }
 
     private void platformCheck(Platform[] platforms) {
+        final float leftEdge = x - width / 2f;
+        final float rightEdge = x + width / 2f;
+        final float bottomEdge = y + height / 2f;
+        final float previousFrameBottomEdge = previousFrameY + height / 2f;
+
+        //check if player should be on a platform if player was above it last frame and is now at or below it
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x - width / 2f, x + width / 2f, y + height / 2f, previousFrameY + height / 2f, velocity.y)) {
+            if (platform.canObjectStandOn(leftEdge, rightEdge,
+                    bottomEdge, previousFrameBottomEdge, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
@@ -169,6 +179,7 @@ public class Player extends PhysicsEntity {
 
 
         //set input to respective direction if another key is down
+        //ensure smooth movement when both keys are pressed by prioritizing last one held
         if (leftKeyDown)
             xInput = -1;
         if (rightKeyDown)
@@ -180,10 +191,11 @@ public class Player extends PhysicsEntity {
 
     private void jump() {
         velocity.y = -JUMP_FORCE;
-        coyoteFrames = 0;
+        coyoteFrames = 0; //reset coyote time to prevent extra jumps
     }
 
     public void cleanup(Main main) {
+        //remove event listeners from main to prevent leaking and keep event clean
         main.removeKeyPressEventListener(keyPressListener);
         main.removeKeyReleaseEventListener(keyReleaseListener);
     }
