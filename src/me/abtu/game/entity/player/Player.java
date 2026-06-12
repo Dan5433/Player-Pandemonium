@@ -253,7 +253,7 @@ public class Player extends PhysicsEntity {
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
     }
 
-    private boolean isDead() {
+    public boolean isDead() {
         return health <= 0;
     }
 
