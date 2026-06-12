@@ -27,7 +27,7 @@ public class Player extends PhysicsEntity {
     protected final int left, right, jump, primary, secondary;
 
     protected boolean isOnPlatform = false;
-    protected int coyoteFrames = COYOTE_FRAMES;
+    protected int coyoteFrames = COYOTE_FRAMES; //small numbers of frames to let players jump slightly after they are already in air
 
     protected int xInput, lastXInput;
     protected final Ability primaryAbility, secondaryAbility;
@@ -72,11 +72,13 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
+        //dont let players go off screen
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
 
         platformCheck(main.getArena().getPlatforms());
 
+        //update coyote time
         coyoteFrames--;
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
@@ -187,7 +189,7 @@ public class Player extends PhysicsEntity {
 
     private void jump() {
         velocity.y = -JUMP_FORCE;
-        coyoteFrames = 0;
+        coyoteFrames = 0; //reset coyote time to prevent extra jumps
     }
 
     public void cleanup(Main main) {
