@@ -14,6 +14,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
+import processing.sound.SoundFile;
 
 import java.util.function.Consumer;
 
@@ -39,6 +40,7 @@ public class Player extends PhysicsEntity {
     protected float maxHealth = 100f;
     protected float health = maxHealth;
     protected final Runnable deathEventListener;
+    protected final SoundFile hurtSound;
 
 
     public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, Main main) {
@@ -61,6 +63,7 @@ public class Player extends PhysicsEntity {
         primaryAbility = new PrimaryAbility(soundManager.throwing);
         secondaryAbility = new SecondaryAbility(soundManager.fireball);
 
+        hurtSound = soundManager.hit;
         this.deathEventListener = deathEventListener;
     }
 
@@ -238,6 +241,8 @@ public class Player extends PhysicsEntity {
         health -= damage;
         if (health <= 0)
             deathEventListener.run();
+
+        hurtSound.play();
     }
 
     public float getHealth() {
