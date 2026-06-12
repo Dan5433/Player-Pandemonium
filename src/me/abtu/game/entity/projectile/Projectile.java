@@ -23,8 +23,12 @@ public class Projectile extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
+        final boolean beyondLeftEdge = x < -width / 2f;
+        final boolean beyondRightEdge = x > GraphicsBuffer.REFERENCE_WIDTH + width / 2f;
+        final boolean beyondTopEdge = y < -height / 2f;
+        final boolean beyondBottomEdge = y > GraphicsBuffer.REFERENCE_HEIGHT + height / 2f;
         //despawn if offscreen
-        if (x < -width / 2f || x > GraphicsBuffer.REFERENCE_WIDTH + width / 2f || y < -height / 2f || y > GraphicsBuffer.REFERENCE_HEIGHT + height / 2f) {
+        if (beyondLeftEdge || beyondRightEdge || beyondTopEdge || beyondBottomEdge) {
             main.removeEntity(this);
             return;
         }
