@@ -209,7 +209,7 @@ public class PlayerMenu extends GraphicsBuffer {
             PlayerCard playerCard = playerCards.get(i);
 
             float horizontalFraction = (float) i / (players.length - 1);
-            Player player = new Player(playerCard.getKeybinds(), horizontalFraction);
+            Player player = new Player(playerCard.getKeybinds(), horizontalFraction, main::checkForWin);
 
             main.addKeyPressEventListener(player.getKeyPressListener());
             main.addKeyReleaseEventListener(player.getKeyReleaseListener());

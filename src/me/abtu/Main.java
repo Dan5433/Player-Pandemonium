@@ -7,6 +7,7 @@ import me.abtu.graphics.buttons.Button;
 import me.abtu.graphics.game.EntityGraphics;
 import me.abtu.graphics.game.GameArena;
 import me.abtu.graphics.game.PlayerHealth;
+import me.abtu.graphics.game.WinScreen;
 import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
@@ -47,7 +48,7 @@ public final class Main extends PApplet {
     //gameplay
     private Player[] players;
     //graphics
-    private GraphicsBuffer ui, entityGraphics, pauseMenu;
+    private GraphicsBuffer ui, entityGraphics, pauseMenu, winScreen;
 
 
     public void setup() {
@@ -82,6 +83,9 @@ public final class Main extends PApplet {
 
         if (state == State.PAUSED)
             pauseMenu.render(this);
+
+        if (state == State.MATCH_WIN)
+            winScreen.render(this);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -194,6 +198,26 @@ public final class Main extends PApplet {
         return players;
     }
 
+    public void checkForWin() {
+        int alivePlayers = 0;
+        int winnerNumber = 0;
+        for (int i = 0; i < players.length; i++) {
+            if (players[i].getHealth() <= 0)
+                continue;
+
+            alivePlayers++;
+            winnerNumber = i + 1;
+        }
+
+        if (alivePlayers == 1)
+            triggerMatchWin(winnerNumber);
+    }
+
+    private void triggerMatchWin(int winnerNumber) {
+        state = State.MATCH_WIN;
+        winScreen = new WinScreen(this, JAVA2D, winnerNumber);
+    }
+
     public float getDeltaTime() {
         return deltaTime;
     }
@@ -201,7 +225,8 @@ public final class Main extends PApplet {
     private enum State {
         MENU,
         GAME,
-        PAUSED
+        PAUSED,
+        MATCH_WIN
     }
 
     public GameArena getArena() {

@@ -37,9 +37,10 @@ public class Player extends PhysicsEntity {
 
     protected float maxHealth = 100f;
     protected float health = maxHealth;
+    protected final Runnable deathEventListener;
 
 
-    public Player(int[] keybinds, float horizontalFraction) {
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener) {
         super(0, 0, 20, 50);
         left = keybinds[0];
         right = keybinds[1];
@@ -57,6 +58,8 @@ public class Player extends PhysicsEntity {
 
         primaryAbility = new PrimaryAbility();
         secondaryAbility = new SecondaryAbility();
+
+        this.deathEventListener = deathEventListener;
     }
 
     public void draw(PGraphics graphics) {
@@ -218,7 +221,7 @@ public class Player extends PhysicsEntity {
     public void dealDamage(float damage) {
         health -= damage;
         if (health <= 0)
-            System.out.println("Dead");
+            deathEventListener.run();
     }
 
     public float getHealth() {
