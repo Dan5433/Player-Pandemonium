@@ -48,10 +48,10 @@ public class Player extends PhysicsEntity {
         primary = keybinds[3];
         secondary = keybinds[4];
 
+        //spread out players at the bottom of the screen
+        //horizontal fraction depends on each player's number/index
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
-
-        velocity = new PVector(0, 1);
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
