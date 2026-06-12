@@ -3,7 +3,8 @@ package me.abtu.util;
 public enum Color {
     RED(0xff_f0_00_00),
     GREEN(0xff_00_f0_00),
-    CYAN(0xff_00_f0_f0);
+    CYAN(0xff_00_f0_f0),
+    GOLD(0xff_ff_ba_00);
 
     private final int hex;
 

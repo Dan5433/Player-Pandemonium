@@ -3,6 +3,7 @@ package me.abtu.graphics.game;
 import me.abtu.Main;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.util.Color;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -36,7 +37,7 @@ public class WinScreen extends GraphicsBuffer {
         rematchButton.update(mouseX, mouseY, main.mousePressed);
         titleScreenButton.update(mouseX, mouseY, main.mousePressed);
 
-        graphics.fill(255);
+        graphics.fill(Color.GOLD.hex());
 
         graphics.textFont(main.getTitleFont());
         graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
