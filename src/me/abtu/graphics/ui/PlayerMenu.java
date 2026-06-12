@@ -172,6 +172,7 @@ public class PlayerMenu extends GraphicsBuffer {
     }
 
     private void updateStartButtonState() {
+        //check if all keybinds are bound; disable start button if not
         for (PlayerCard playerCard : playerCards) {
             for (int keybind : playerCard.getKeybinds()) {
                 if (keybind == 0) {
@@ -209,7 +210,7 @@ public class PlayerMenu extends GraphicsBuffer {
             PlayerCard playerCard = playerCards.get(i);
 
             float horizontalFraction = (float) i / (players.length - 1);
-            Player player = new Player(playerCard.getKeybinds(), horizontalFraction);
+            Player player = new Player(playerCard.getKeybinds(), horizontalFraction, main::checkForWin);
 
             main.addKeyPressEventListener(player.getKeyPressListener());
             main.addKeyReleaseEventListener(player.getKeyReleaseListener());
