@@ -29,7 +29,7 @@ public class Player extends PhysicsEntity {
     protected boolean isOnPlatform = false;
     protected int coyoteFrames = COYOTE_FRAMES; //small numbers of frames to let players jump slightly after they are already in air
 
-    protected int xInput, lastXInput;
+    protected int xInput, lastXInput; //last x input is the last non-zero input; determines which way player is facing
     protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
@@ -178,6 +178,7 @@ public class Player extends PhysicsEntity {
 
 
         //set input to respective direction if another key is down
+        //ensure smooth movement when both keys are pressed by prioritizing last one held
         if (leftKeyDown)
             xInput = -1;
         if (rightKeyDown)
