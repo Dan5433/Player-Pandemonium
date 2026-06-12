@@ -195,6 +195,7 @@ public class Player extends PhysicsEntity {
     }
 
     public void cleanup(Main main) {
+        //remove event listeners from main to prevent leaking and keep event clean
         main.removeKeyPressEventListener(keyPressListener);
         main.removeKeyReleaseEventListener(keyReleaseListener);
     }
