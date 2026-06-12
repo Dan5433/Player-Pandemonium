@@ -63,6 +63,9 @@ public class Player extends PhysicsEntity {
     }
 
     public void draw(PGraphics graphics) {
+        if (isDead())
+            return;
+
         graphics.rectMode(PConstants.CENTER);
         graphics.strokeWeight(1);
         graphics.stroke(0);
@@ -72,7 +75,6 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
-        //TODO: dont draw or update when dead
         //dont let players go off screen
         x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
         y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
@@ -249,5 +251,14 @@ public class Player extends PhysicsEntity {
 
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    @Override
+    protected boolean shouldUpdate() {
+        return !isDead();
     }
 }

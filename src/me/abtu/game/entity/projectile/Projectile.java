@@ -51,6 +51,9 @@ public class Projectile extends PhysicsEntity {
         final float previousFrameLeftEdge = previousFrameX - width / 2f;
         final float previousFrameRightEdge = previousFrameX + width / 2f;
         for (Player player : players) {
+            if (player.isDead()) //skip dead players
+                continue;
+
             if (player == owner) //prevent player who shot projectile being hit
                 continue;
 
