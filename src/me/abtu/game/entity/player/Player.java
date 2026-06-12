@@ -86,8 +86,15 @@ public class Player extends PhysicsEntity {
     }
 
     private void platformCheck(Platform[] platforms) {
+        final float leftEdge = x - width / 2f;
+        final float rightEdge = x + width / 2f;
+        final float bottomEdge = y + height / 2f;
+        final float previousFrameBottomEdge = previousFrameY + height / 2f;
+
+        //check if player should be on a platform if player was above it last frame and is now at or below it
         for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(x - width / 2f, x + width / 2f, y + height / 2f, previousFrameY + height / 2f, velocity.y)) {
+            if (platform.canObjectStandOn(leftEdge, rightEdge,
+                    bottomEdge, previousFrameBottomEdge, velocity.y)) {
                 isOnPlatform = true;
 
                 //set y to platform top
