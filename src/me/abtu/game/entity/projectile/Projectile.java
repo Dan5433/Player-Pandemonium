@@ -44,8 +44,8 @@ public class Projectile extends PhysicsEntity {
         final float bottomEdge = y + height / 2f;
         final float leftEdge = x - width / 2f;
         final float rightEdge = x + width / 2f;
-        final float leftEdgePrevious = previousFrameX + width / 2f;
-        final float rightEdgePrevious = previousFrameX - width / 2f;
+        final float previousFrameLeftEdge = previousFrameX - width / 2f;
+        final float previousFrameRightEdge = previousFrameX + width / 2f;
         for (Player player : players) {
             if (player == owner) //prevent player who shot projectile being hit
                 continue;
@@ -54,9 +54,12 @@ public class Projectile extends PhysicsEntity {
             PVector playerBottomRight = player.getBottomRightEdge();
             final float playerPreviousX = player.getPreviousFrameX();
 
+            //check hit by comparing positions of previous and current frame
+            //counts as hit if projectile went through player
+            //prevents projectile from phasing through player on large game steps
             final boolean withinPlayerY = bottomEdge >= playerTopLeft.y && topEdge <= playerBottomRight.y;
-            final boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && leftEdgePrevious <= playerPreviousX;
-            final boolean hitPlayerRight = leftEdge <= playerBottomRight.x && rightEdgePrevious >= playerPreviousX;
+            final boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && previousFrameLeftEdge <= playerPreviousX;
+            final boolean hitPlayerRight = leftEdge <= playerBottomRight.x && previousFrameRightEdge >= playerPreviousX;
 
             if (withinPlayerY && (hitPlayerLeft || hitPlayerRight)) {
                 player.dealDamage(damage);
