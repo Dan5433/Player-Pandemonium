@@ -5,11 +5,11 @@ import me.abtu.graphics.GraphicsBuffer;
 
 public abstract class PhysicsEntity extends Entity {
     //unscaled
-    protected float maxHorizontalVelocity = 5.5f;
-    protected float terminalVelocity = 10f;
+    protected float maxHorizontalVelocity = 50f;
+    protected float terminalVelocity = 435f;
     //scaled for delta time
     protected float friction = 7.5f;
-    protected float gravity = 0.75f;
+    protected float gravity = 1450.75f;
 
 
     public PhysicsEntity(float x, float y, float width, float height) {
@@ -24,8 +24,8 @@ public abstract class PhysicsEntity extends Entity {
         final float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         updateVelocity(deltaTimeSeconds);
 
-        x += velocity.x;
-        y += velocity.y;
+        x += velocity.x * deltaTimeSeconds;
+        y += velocity.y * deltaTimeSeconds;
 
         updateInternal(main);
     }
@@ -49,7 +49,7 @@ public abstract class PhysicsEntity extends Entity {
         //update y velocity
         if (isInAir())
             //apply delta time scaled gravity if in air
-            velocity.y += 1 + gravity * deltaTimeSeconds;
+            velocity.y += gravity * deltaTimeSeconds;
         else
             velocity.y = 0; //reset y velocity if not in air
 
