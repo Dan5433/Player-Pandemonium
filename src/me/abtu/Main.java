@@ -1,5 +1,6 @@
 package me.abtu;
 
+import me.abtu.audio.SoundManager;
 import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
@@ -38,8 +39,6 @@ public final class Main extends PApplet {
     // fonts
     private PFont pixelbit, jersey;
 
-    private final ArrayList<Entity> entities = new ArrayList<>();
-    private GameArena arena;
 
     //control values
     private State state = State.MENU;
@@ -47,8 +46,14 @@ public final class Main extends PApplet {
 
     //gameplay
     private Player[] players;
+    private final ArrayList<Entity> entities = new ArrayList<>();
+    private GameArena arena;
+
     //graphics
     private GraphicsBuffer ui, entityGraphics, pauseMenu, winScreen;
+
+    //sound
+    private SoundManager soundManager;
 
 
     public void setup() {
@@ -56,6 +61,7 @@ public final class Main extends PApplet {
         loadFonts();
 
         initializeGraphics();
+        soundManager = new SoundManager(this);
     }
 
     private void initializeGraphics() {
@@ -244,5 +250,9 @@ public final class Main extends PApplet {
 
     public GameArena getArena() {
         return arena;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }
