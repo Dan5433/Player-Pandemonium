@@ -19,6 +19,8 @@ public class Projectile extends PhysicsEntity {
         this.damage = damage;
         this.velocity = velocity;
         this.owner = owner;
+
+        maxHorizontalVelocity = Math.abs(velocity.x);
     }
 
     @Override
