@@ -7,7 +7,7 @@ public class PhysicsProjectile extends Projectile {
     public PhysicsProjectile(float x, float y, float width, float height, float damage, PVector velocity, Player owner) {
         super(x, y, width, height, damage, velocity, owner);
 
-        gravity = 0.5f;
+        gravity = 1875.75f;
     }
 
     @Override
