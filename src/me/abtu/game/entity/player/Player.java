@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 public class Player extends PhysicsEntity {
     //unscaled
-    protected static final int COYOTE_FRAMES = 5;
+    protected static final int COYOTE_FRAMES = 3;
     //scaled by delta time
     protected static final float ACCELERATION = 300.5f;
     protected static final float JUMP_FORCE = 455.5f;
