@@ -23,8 +23,8 @@ public class Player extends PhysicsEntity {
     //unscaled
     protected static final int COYOTE_FRAMES = 5;
     //scaled by delta time
-    protected static final float ACCELERATION = 20.5f;
-    protected static final float JUMP_FORCE = 425.5f;
+    protected static final float ACCELERATION = 300.5f;
+    protected static final float JUMP_FORCE = 455.5f;
 
     protected final int left, right, jump, primary, secondary;
 

@@ -5,11 +5,11 @@ import me.abtu.graphics.GraphicsBuffer;
 
 public abstract class PhysicsEntity extends Entity {
     //unscaled
-    protected float maxHorizontalVelocity = 50f;
-    protected float terminalVelocity = 435f;
+    protected float maxHorizontalVelocity = 325f;
+    protected float terminalVelocity = 465f;
     //scaled for delta time
-    protected float friction = 7.5f;
-    protected float gravity = 1450.75f;
+    protected float friction = 6.5f;
+    protected float gravity = 1475.75f;
 
 
     public PhysicsEntity(float x, float y, float width, float height) {
