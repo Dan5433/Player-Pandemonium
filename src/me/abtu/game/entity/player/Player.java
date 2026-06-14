@@ -54,7 +54,7 @@ public class Player extends PhysicsEntity {
         //spread out players at the bottom of the screen
         //horizontal fraction depends on each player's number/index
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
-        y = 0;
+        y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
 
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
