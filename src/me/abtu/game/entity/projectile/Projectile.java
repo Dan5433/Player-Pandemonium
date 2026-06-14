@@ -25,17 +25,15 @@ public class Projectile extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
+        dealDamageToPlayers(main.getPlayers(), main);
+
         final boolean beyondLeftEdge = x < -width / 2f;
         final boolean beyondRightEdge = x > GraphicsBuffer.REFERENCE_WIDTH + width / 2f;
         final boolean beyondTopEdge = y < -height / 2f;
         final boolean beyondBottomEdge = y > GraphicsBuffer.REFERENCE_HEIGHT + height / 2f;
         //despawn if offscreen
-        if (beyondLeftEdge || beyondRightEdge || beyondTopEdge || beyondBottomEdge) {
+        if (beyondLeftEdge || beyondRightEdge || beyondTopEdge || beyondBottomEdge)
             main.removeEntity(this);
-            return;
-        }
-
-        dealDamageToPlayers(main.getPlayers(), main);
     }
 
     public void draw(PGraphics graphics) {
@@ -52,6 +50,8 @@ public class Projectile extends PhysicsEntity {
         final float rightEdge = x + width / 2f;
         final float previousFrameLeftEdge = previousFrameX - width / 2f;
         final float previousFrameRightEdge = previousFrameX + width / 2f;
+        final float previousFrameTopEdge = previousFrameY - height / 2f;
+        final float previousFrameBottomEdge = previousFrameY + height / 2f;
         for (Player player : players) {
             if (player.isDead()) //skip dead players
                 continue;
@@ -62,15 +62,18 @@ public class Projectile extends PhysicsEntity {
             PVector playerTopLeft = player.getTopLeftEdge();
             PVector playerBottomRight = player.getBottomRightEdge();
             final float playerPreviousX = player.getPreviousFrameX();
+            final float playerPreviousY = player.getPreviousFrameY();
 
             //check hit by comparing positions of previous and current frame
             //counts as hit if projectile went through player
             //prevents projectile from phasing through player on large game steps
             final boolean withinPlayerY = bottomEdge >= playerTopLeft.y && topEdge <= playerBottomRight.y;
+            final boolean hitPlayerTop = bottomEdge >= playerTopLeft.y && previousFrameTopEdge <= playerPreviousY;
+            final boolean hitPlayerBottom = topEdge <= playerBottomRight.y && previousFrameBottomEdge >= playerPreviousY;
             final boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && previousFrameLeftEdge <= playerPreviousX;
             final boolean hitPlayerRight = leftEdge <= playerBottomRight.x && previousFrameRightEdge >= playerPreviousX;
 
-            if (withinPlayerY && (hitPlayerLeft || hitPlayerRight)) {
+            if ((withinPlayerY || hitPlayerTop || hitPlayerBottom) && (hitPlayerLeft || hitPlayerRight)) {
                 player.dealDamage(damage);
                 main.removeEntity(this);
                 return;
