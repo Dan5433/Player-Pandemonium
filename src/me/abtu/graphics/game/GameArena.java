@@ -56,4 +56,8 @@ public class GameArena extends GraphicsBuffer {
     public float getCountdownSeconds() {
         return countdownSeconds;
     }
+
+    public void resetForRematch() {
+        countdownSeconds = 3f;
+    }
 }

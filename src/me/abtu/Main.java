@@ -178,7 +178,8 @@ public final class Main extends PApplet {
         }
         Collections.addAll(entities, players);
 
-        state = State.GAME;
+        arena.resetForRematch();
+        state = State.COUNTDOWN;
     }
 
     public void addKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
