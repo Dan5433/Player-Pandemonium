@@ -20,8 +20,12 @@ public class SecondaryAbility extends Ability {
         final int projectileSize = 20;
         final float xOffset = xDirection * projectileSize * 1.2f;
 
-        final PVector projectileVelocity = new PVector(xDirection * 470.5f, -750f);
-        final int projectileDamage = 25;
+        final PVector velocityMinMaxX = new PVector(455.75f, 478.5f);
+        final PVector velocityMinMaxY = new PVector(-732.5f, -785.75f);
+        final PVector projectileVelocity = new PVector(xDirection * main.random(velocityMinMaxX.x, velocityMinMaxX.y),
+                main.random(velocityMinMaxY.x, velocityMinMaxY.y));
+        final PVector damageMinMax = new PVector(22f, 31f);
+        final float projectileDamage = main.random(damageMinMax.x, damageMinMax.y);
 
         PhysicsProjectile projectile = new PhysicsProjectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
                 projectileDamage, projectileVelocity, player);
