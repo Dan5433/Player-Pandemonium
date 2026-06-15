@@ -160,9 +160,10 @@ public class PlayerMenu extends GraphicsBuffer {
         for (int i = 0; i < playerCards.size(); i++) {
             PlayerCard playerCard = playerCards.get(i);
 
+            final int playerColor = playerCard.getColor();
             final float horizontalFraction = (float) i / (players.length - 1);
-            final PImage spriteLeft = main.loadImage("sprites/player/" + (i + 1) + "_left.png");
-            final PImage spriteRight = main.loadImage("sprites/player/" + (i + 1) + "_right.png");
+            final PImage spriteLeft = recolorWhite(main.loadImage("sprites/player/" + (i + 1) + "_left.png"), playerColor);
+            final PImage spriteRight = recolorWhite(main.loadImage("sprites/player/" + (i + 1) + "_right.png"), playerColor);
             final Runnable deathEventListener = main::checkForWin;
             final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, main.getSoundManager(), spriteLeft, spriteRight);
 
@@ -187,5 +188,16 @@ public class PlayerMenu extends GraphicsBuffer {
 
     public void addAvailableColor(int color) {
         availableColors.offer(color);
+    }
+
+    private PImage recolorWhite(PImage image, int color) {
+        for (int i = 0; i < image.pixels.length; i++) {
+            int pixel = image.pixels[i];
+            if (pixel != Color.WHITE.hex())
+                continue;
+
+            image.pixels[i] = color;
+        }
+        return image;
     }
 }
