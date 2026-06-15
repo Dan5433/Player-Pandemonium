@@ -15,10 +15,10 @@ public class Button {
     protected final int strokeColor;
     protected final float strokeWeight;
 
-    protected final int normalColor;
-    protected final int hoverColor;
-    protected final int pressedColor;
-    protected final int disabledColor;
+    protected int normalColor;
+    protected int hoverColor;
+    protected int pressedColor;
+    protected int disabledColor;
 
     protected final int hoverExpand;
     protected String text;
@@ -107,6 +107,13 @@ public class Button {
         this.text = text;
     }
 
+    public void changeColors(int normalColor, int hoverColor, int pressedColor, int disabledColor) {
+        this.normalColor = normalColor;
+        this.hoverColor = hoverColor;
+        this.pressedColor = pressedColor;
+        this.disabledColor = disabledColor;
+    }
+
     protected boolean isMouseInside(float mouseX, float mouseY) {
         switch (drawMode) {
             case PConstants.CORNER -> {
@@ -158,10 +165,10 @@ public class Button {
         private final Consumer<Button> pressCallback;
 
         private String text = "";
-        private int textColor = 0;
+        private final int textColor = 0;
 
-        private int strokeColor = 0;
-        private float strokeWeight = 1f;
+        private final int strokeColor = 0;
+        private final float strokeWeight = 1f;
 
         private int normalColor = 255;
         private int hoverColor = 220;
@@ -187,22 +194,11 @@ public class Button {
             return this;
         }
 
-        public Builder textColor(int textColor) {
-            this.textColor = textColor;
-            return this;
-        }
-
         public Builder buttonColors(int normalColor, int hoverColor, int pressedColor, int disabledColor) {
             this.normalColor = normalColor;
             this.hoverColor = hoverColor;
             this.pressedColor = pressedColor;
             this.disabledColor = disabledColor;
-            return this;
-        }
-
-        public Builder buttonStroke(int strokeColor, float strokeWeight) {
-            this.strokeColor = strokeColor;
-            this.strokeWeight = strokeWeight;
             return this;
         }
 

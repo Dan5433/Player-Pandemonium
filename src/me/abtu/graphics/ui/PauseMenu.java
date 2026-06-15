@@ -3,6 +3,7 @@ package me.abtu.graphics.ui;
 import me.abtu.Main;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.util.Color;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -32,7 +33,7 @@ public class PauseMenu extends GraphicsBuffer {
         resumeButton.update(mouseX, mouseY, main.mousePressed);
         titleScreenButton.update(mouseX, mouseY, main.mousePressed);
 
-        graphics.fill(255);
+        graphics.fill(Color.WHITE.hex());
 
         graphics.textFont(main.getTitleFont());
         graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
