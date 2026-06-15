@@ -9,11 +9,7 @@ import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.entity.player.abilities.SecondaryAbility;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
-import me.abtu.util.Color;
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
-import processing.core.PVector;
+import processing.core.*;
 import processing.sound.SoundFile;
 
 import java.util.function.Consumer;
@@ -26,6 +22,7 @@ public class Player extends PhysicsEntity {
     protected static final float ACCELERATION = 300.5f;
     protected static final float JUMP_FORCE = 525.5f;
 
+    protected final PImage sprite;
     protected final int left, right, jump, primary, secondary;
 
     protected boolean isOnPlatform = false;
@@ -43,8 +40,8 @@ public class Player extends PhysicsEntity {
     protected final SoundFile hurtSound;
 
 
-    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, Main main) {
-        super(0, 0, 20, 50);
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, SoundManager soundManager, PImage sprite) {
+        super(0, 0, sprite.width, sprite.height);
         left = keybinds[0];
         right = keybinds[1];
         jump = keybinds[2];
@@ -59,23 +56,21 @@ public class Player extends PhysicsEntity {
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
 
-        SoundManager soundManager = main.getSoundManager();
+        hurtSound = soundManager.hit;
+        this.deathEventListener = deathEventListener;
+
         primaryAbility = new PrimaryAbility(soundManager.throwing);
         secondaryAbility = new SecondaryAbility(soundManager.fireball);
 
-        hurtSound = soundManager.hit;
-        this.deathEventListener = deathEventListener;
+        this.sprite = sprite;
     }
 
     public void draw(PGraphics graphics) {
         if (isDead())
             return;
 
-        graphics.rectMode(PConstants.CENTER);
-        graphics.strokeWeight(1);
-        graphics.stroke(0);
-        graphics.fill(Color.RED.hex());
-        graphics.rect(x, y, width, height);
+        graphics.imageMode(PConstants.CENTER);
+        graphics.image(sprite, x, y, width, height);
     }
 
     @Override

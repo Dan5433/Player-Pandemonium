@@ -7,6 +7,7 @@ import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -209,8 +210,10 @@ public class PlayerMenu extends GraphicsBuffer {
         for (int i = 0; i < playerCards.size(); i++) {
             PlayerCard playerCard = playerCards.get(i);
 
-            float horizontalFraction = (float) i / (players.length - 1);
-            Player player = new Player(playerCard.getKeybinds(), horizontalFraction, main::checkForWin, main);
+            final float horizontalFraction = (float) i / (players.length - 1);
+            final PImage sprite = main.loadImage("sprites/player/" + (i + 1) + ".png");
+            final Runnable deathEventListener = main::checkForWin;
+            final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, main.getSoundManager(), sprite);
 
             main.addKeyPressEventListener(player.getKeyPressListener());
             main.addKeyReleaseEventListener(player.getKeyReleaseListener());
