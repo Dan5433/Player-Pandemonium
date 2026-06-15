@@ -12,6 +12,7 @@ import me.abtu.graphics.game.WinScreen;
 import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
+import me.abtu.util.Color;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.event.KeyEvent;
@@ -71,7 +72,7 @@ public final class Main extends PApplet {
 
     public void draw() {
         deltaTime = (System.nanoTime() - frameRateLastNanos) / 1_000_000f;
-        background(255);
+        background(Color.WHITE.hex());
 
         if (state == State.GAME)
             gameUpdate();

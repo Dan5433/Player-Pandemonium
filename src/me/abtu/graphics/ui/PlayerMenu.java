@@ -5,12 +5,14 @@ import me.abtu.Main;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
+import me.abtu.util.Color;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.core.PVector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PlayerMenu extends GraphicsBuffer {
 
@@ -18,6 +20,7 @@ public class PlayerMenu extends GraphicsBuffer {
     private static final int MAX_PLAYERS = 4;
 
     private final ArrayList<PlayerCard> playerCards = new ArrayList<>(2);
+    private final HashSet<Integer> availableColors = new HashSet<>(List.of(Color.RED.hex()));
 
     private final Button addPlayerButton, removePlayerButton, startGameButton;
 
@@ -28,11 +31,11 @@ public class PlayerMenu extends GraphicsBuffer {
         this.main = main;
 
         playerCards.add(new PlayerCard(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
-                this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
+                this));
         main.addKeyPressEventListener(playerCards.getFirst().getKeybindEventListener());
 
         playerCards.add(new PlayerCard(KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, KeyEvent.VK_CONTROL,
-                this::clearListeningButtons, this::canBindKey, this::updateStartButtonState));
+                this));
         main.addKeyPressEventListener(playerCards.get(1).getKeybindEventListener());
 
         final int buttonSize = 20;
@@ -64,7 +67,7 @@ public class PlayerMenu extends GraphicsBuffer {
 
         startGameButton.disable();
 
-        PlayerCard playerCard = new PlayerCard(this::clearListeningButtons, this::canBindKey, this::updateStartButtonState);
+        PlayerCard playerCard = new PlayerCard(this);
         playerCards.add(playerCard);
         main.addKeyPressEventListener(playerCard.getKeybindEventListener());
     }
@@ -93,78 +96,12 @@ public class PlayerMenu extends GraphicsBuffer {
 
         graphics.rectMode(PConstants.CENTER);
 
-        graphics.fill(255);
-        final float cardMargin = REFERENCE_WIDTH / 64f;
-        final float cardWidth = REFERENCE_WIDTH / 5f;
-        final float cardHeight = REFERENCE_HEIGHT / 2.4f;
-        int numPlayers = playerCards.size();
-        for (int i = 0; i < numPlayers; i++) {
+        graphics.fill(Color.WHITE.hex());
+        graphics.textFont(main.getDefaultFont());
+        int playerCount = playerCards.size();
+        for (int i = 0; i < playerCount; i++) {
             PlayerCard playerCard = playerCards.get(i);
-
-            Button leftKeybindButton = playerCard.getLeftKeybindButton();
-            Button rightKeybindButton = playerCard.getRightKeybindButton();
-            Button jumpKeybindButton = playerCard.getJumpKeybindButton();
-            Button primaryKeybindButton = playerCard.getPrimaryKeybindButton();
-            Button secondaryKeybindButton = playerCard.getSecondaryKeybindButton();
-
-            float offset = i - (numPlayers - 1) / 2f;
-            float cardX = HALF_WIDTH + offset * (cardWidth + cardMargin);
-            graphics.fill(255);
-            graphics.rect(cardX, HALF_HEIGHT, cardWidth, cardHeight);
-
-
-            PVector buttonTranslate = new PVector();
-            graphics.translate(cardX, HALF_HEIGHT - cardHeight / 2f);
-            buttonTranslate.add(new PVector(cardX, HALF_HEIGHT - cardHeight / 2f));
-
-            //draw player keybinds
-            {
-                graphics.fill(0);
-                graphics.textFont(main.getDefaultFont());
-                graphics.textSize(SMALL_TEXT_SIZE);
-
-                final float textMargin = 3;
-                graphics.textAlign(PConstants.CENTER, PConstants.TOP);
-                graphics.text("Player " + (i + 1), 0, textMargin);
-
-                graphics.translate(-cardWidth / 2f, SMALL_TEXT_SIZE);
-                buttonTranslate.add(new PVector(-cardWidth / 2f, SMALL_TEXT_SIZE));
-                graphics.textAlign(PConstants.LEFT, PConstants.TOP);
-
-                graphics.translate(textMargin, textMargin + SMALL_TEXT_SIZE);
-                buttonTranslate.add(new PVector(textMargin, textMargin + SMALL_TEXT_SIZE));
-                graphics.text("Left:", 0, 0);
-                leftKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
-                leftKeybindButton.draw(graphics);
-
-                graphics.translate(0, SMALL_TEXT_SIZE);
-                buttonTranslate.y += SMALL_TEXT_SIZE;
-                graphics.text("Right:", 0, 0);
-                rightKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
-                rightKeybindButton.draw(graphics);
-
-                graphics.translate(0, SMALL_TEXT_SIZE);
-                buttonTranslate.y += SMALL_TEXT_SIZE;
-                graphics.text("Jump:", 0, 0);
-                jumpKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
-                jumpKeybindButton.draw(graphics);
-
-                graphics.translate(0, SMALL_TEXT_SIZE);
-                buttonTranslate.y += SMALL_TEXT_SIZE;
-                graphics.text("Primary:", 0, 0);
-                primaryKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
-                primaryKeybindButton.draw(graphics);
-
-                graphics.translate(0, SMALL_TEXT_SIZE);
-                buttonTranslate.y += SMALL_TEXT_SIZE;
-                graphics.text("Secondary:", 0, 0);
-                secondaryKeybindButton.update(mouseX - buttonTranslate.x, mouseY - buttonTranslate.y, main.mousePressed);
-                secondaryKeybindButton.draw(graphics);
-
-
-                graphics.translate(-textMargin, -(textMargin + SMALL_TEXT_SIZE * 5));
-                graphics.translate(-(cardX - cardWidth / 2f), -(HALF_HEIGHT - cardHeight / 2f + SMALL_TEXT_SIZE));
-            }
+            playerCard.draw(graphics, mouseX, mouseY, main.mousePressed, i, playerCount);
         }
 
         addPlayerButton.draw(graphics);
@@ -172,7 +109,7 @@ public class PlayerMenu extends GraphicsBuffer {
         startGameButton.draw(graphics);
     }
 
-    private void updateStartButtonState() {
+    public void updateStartButtonState() {
         //check if all keybinds are bound; disable start button if not
         for (PlayerCard playerCard : playerCards) {
             for (int keybind : playerCard.getKeybinds()) {
@@ -186,12 +123,12 @@ public class PlayerMenu extends GraphicsBuffer {
         startGameButton.enable();
     }
 
-    private void clearListeningButtons() {
+    public void clearListeningButtons() {
         for (PlayerCard playerCard : playerCards)
             playerCard.clearListeningButton();
     }
 
-    private boolean canBindKey(int keyCode) {
+    public boolean canBindKey(int keyCode) {
         if (keyCode == KeyEvent.VK_ESCAPE)
             return false;
 
@@ -222,6 +159,10 @@ public class PlayerMenu extends GraphicsBuffer {
             players[i] = player;
         }
         return players;
+    }
+
+    public HashSet<Integer> getAvailableColors() {
+        return availableColors;
     }
 
     public void cleanup(Main main) {

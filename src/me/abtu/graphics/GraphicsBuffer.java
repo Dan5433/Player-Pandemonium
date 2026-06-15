@@ -1,6 +1,7 @@
 package me.abtu.graphics;
 
 import me.abtu.Main;
+import me.abtu.util.Color;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -48,7 +49,7 @@ public abstract class GraphicsBuffer {
 
         if (drawBackground)
             graphics.background(backgroundColor);
-        graphics.fill(255);
+        graphics.fill(Color.WHITE.hex());
         graphics.stroke(0);
 
         drawBuffer(main, graphics, localMouseX, localMouseY);

@@ -45,7 +45,7 @@ public class PlayerHealth extends GraphicsBuffer {
             graphics.rect(x, overlayHeight / 2f - statHeight / 2f, healthBarWidth, statHeight);
 
             //draw player index
-            graphics.fill(255);
+            graphics.fill(Color.WHITE.hex());
             graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
             graphics.textFont(main.getDefaultFont());
             graphics.textSize(SMALL_TEXT_SIZE);
