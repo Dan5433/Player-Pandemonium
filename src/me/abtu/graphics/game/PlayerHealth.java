@@ -23,14 +23,14 @@ public class PlayerHealth extends GraphicsBuffer {
         graphics.rect(0, 0, REFERENCE_WIDTH, overlayHeight);
 
         //draw health
-        final float margin = 30;
+        final float statEndMargin = 30;
         final float statWidth = REFERENCE_WIDTH / 5f;
         final float statHeight = REFERENCE_HEIGHT / 20f;
         Player[] players = main.getPlayers();
         for (int i = 0; i < players.length; i++) {
             Player player = players[i];
             final float horizontalFraction = (float) i / (players.length - 1);
-            final float x = PApplet.lerp(margin, REFERENCE_WIDTH - margin - statWidth, horizontalFraction);
+            final float x = PApplet.lerp(statEndMargin, REFERENCE_WIDTH - statEndMargin - statWidth, horizontalFraction);
 
             //draw black bar background
             graphics.fill(0);
@@ -44,12 +44,17 @@ public class PlayerHealth extends GraphicsBuffer {
             graphics.fill(Color.GREEN.hex());
             graphics.rect(x, overlayHeight / 2f - statHeight / 2f, healthBarWidth, statHeight);
 
-            //draw player index
+            final float textSidePadding = 3.5f;
             graphics.fill(Color.WHITE.hex());
-            graphics.textAlign(PConstants.CENTER, PConstants.CENTER);
             graphics.textFont(main.getDefaultFont());
+            //draw player index
+            graphics.textAlign(PConstants.LEFT, PConstants.CENTER);
             graphics.textSize(SMALL_TEXT_SIZE);
-            graphics.text("Player " + (i + 1), x + statWidth / 2f, overlayHeight / 2f);
+            graphics.text("Player " + (i + 1), x + textSidePadding, overlayHeight / 2f);
+            //draw player health
+            graphics.textAlign(PConstants.RIGHT, PConstants.CENTER);
+            graphics.textSize(SMALL_TEXT_SIZE);
+            graphics.text(player.getHealth() + "/" + player.getMaxHealth(), x + statWidth - textSidePadding, overlayHeight / 2f);
         }
     }
 }
