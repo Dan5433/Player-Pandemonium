@@ -22,7 +22,7 @@ public class Player extends PhysicsEntity {
     protected static final float ACCELERATION = 300.5f;
     protected static final float JUMP_FORCE = 525.5f;
 
-    protected final PImage sprite;
+    protected final PImage spriteLeft, spriteRight;
     protected final int left, right, jump, primary, secondary;
 
     protected boolean isOnPlatform = false;
@@ -40,8 +40,8 @@ public class Player extends PhysicsEntity {
     protected final SoundFile hurtSound;
 
 
-    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, SoundManager soundManager, PImage sprite) {
-        super(0, 0, sprite.width, sprite.height);
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, SoundManager soundManager, PImage spriteLeft, PImage spriteRight) {
+        super(0, 0, spriteRight.width, spriteRight.height);
         left = keybinds[0];
         right = keybinds[1];
         jump = keybinds[2];
@@ -62,13 +62,16 @@ public class Player extends PhysicsEntity {
         primaryAbility = new PrimaryAbility(soundManager.throwing);
         secondaryAbility = new SecondaryAbility(soundManager.fireball);
 
-        this.sprite = sprite;
+        this.spriteLeft = spriteLeft;
+        this.spriteRight = spriteRight;
+        lastXInput = horizontalFraction > 0.5f ? -1 : 1; //set facing direction based on x position
     }
 
     public void draw(PGraphics graphics) {
         if (isDead())
             return;
 
+        PImage sprite = lastXInput > 0 ? spriteRight : spriteLeft; //flips image based on facing direction
         graphics.imageMode(PConstants.CENTER);
         graphics.image(sprite, x, y, width, height);
     }

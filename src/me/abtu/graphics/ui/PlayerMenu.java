@@ -211,9 +211,10 @@ public class PlayerMenu extends GraphicsBuffer {
             PlayerCard playerCard = playerCards.get(i);
 
             final float horizontalFraction = (float) i / (players.length - 1);
-            final PImage sprite = main.loadImage("sprites/player/" + (i + 1) + ".png");
+            final PImage spriteLeft = main.loadImage("sprites/player/" + (i + 1) + "_left.png");
+            final PImage spriteRight = main.loadImage("sprites/player/" + (i + 1) + "_right.png");
             final Runnable deathEventListener = main::checkForWin;
-            final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, main.getSoundManager(), sprite);
+            final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, main.getSoundManager(), spriteLeft, spriteRight);
 
             main.addKeyPressEventListener(player.getKeyPressListener());
             main.addKeyReleaseEventListener(player.getKeyReleaseListener());
