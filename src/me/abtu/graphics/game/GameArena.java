@@ -9,6 +9,8 @@ import processing.core.PGraphics;
 public class GameArena extends GraphicsBuffer {
     protected Platform[] platforms;
 
+    private float countdownSeconds = 3f;
+
     public GameArena(Main main, String renderer) {
         super(main, renderer);
 
@@ -42,7 +44,20 @@ public class GameArena extends GraphicsBuffer {
             platform.draw(graphics);
     }
 
+    public float updateCountdown(float deltaTimeSeconds) {
+        countdownSeconds -= deltaTimeSeconds;
+        return countdownSeconds;
+    }
+
     public Platform[] getPlatforms() {
         return platforms;
+    }
+
+    public float getCountdownSeconds() {
+        return countdownSeconds;
+    }
+
+    public void resetForRematch() {
+        countdownSeconds = 3f;
     }
 }

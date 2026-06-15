@@ -5,10 +5,7 @@ import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.graphics.buttons.Button;
-import me.abtu.graphics.game.EntityGraphics;
-import me.abtu.graphics.game.GameArena;
-import me.abtu.graphics.game.PlayerHealth;
-import me.abtu.graphics.game.WinScreen;
+import me.abtu.graphics.game.*;
 import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
@@ -51,7 +48,7 @@ public final class Main extends PApplet {
     private GameArena arena;
 
     //graphics
-    private GraphicsBuffer ui, entityGraphics, pauseMenu, winScreen;
+    private GraphicsBuffer ui, entityGraphics, pauseMenu, winScreen, matchCountdown;
 
     //sound
     private SoundManager soundManager;
@@ -72,10 +69,17 @@ public final class Main extends PApplet {
 
     public void draw() {
         deltaTime = (System.nanoTime() - frameRateLastNanos) / 1_000_000f;
+        final float deltaTimeSeconds = deltaTime / 1_000f;
         background(Color.WHITE.hex());
 
         if (state == State.GAME)
             gameUpdate();
+
+        if (state == State.COUNTDOWN) {
+            float countdown = arena.updateCountdown(deltaTimeSeconds);
+            if (countdown <= 0)
+                state = State.GAME;
+        }
 
 
         //draw graphics
@@ -93,6 +97,9 @@ public final class Main extends PApplet {
 
         if (state == State.MATCH_WIN)
             winScreen.render(this);
+
+        if (state == State.COUNTDOWN)
+            matchCountdown.render(this);
     }
 
     public void keyPressed(KeyEvent event) {
@@ -138,7 +145,8 @@ public final class Main extends PApplet {
         ui = new PlayerHealth(this, JAVA2D);
         arena = new GameArena(this, JAVA2D);
         entityGraphics = new EntityGraphics(this, JAVA2D);
-        state = State.GAME;
+        matchCountdown = new MatchCountdown(this, JAVA2D);
+        state = State.COUNTDOWN;
     }
 
     @SuppressWarnings("unused")
@@ -170,7 +178,8 @@ public final class Main extends PApplet {
         }
         Collections.addAll(entities, players);
 
-        state = State.GAME;
+        arena.resetForRematch();
+        state = State.COUNTDOWN;
     }
 
     public void addKeyPressEventListener(Consumer<com.jogamp.newt.event.KeyEvent> listener) {
@@ -244,6 +253,7 @@ public final class Main extends PApplet {
 
     private enum State {
         MENU,
+        COUNTDOWN,
         GAME,
         PAUSED,
         MATCH_WIN
