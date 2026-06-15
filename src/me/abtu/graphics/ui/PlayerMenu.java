@@ -165,7 +165,7 @@ public class PlayerMenu extends GraphicsBuffer {
             final PImage spriteLeft = recolorWhite(main.loadImage("sprites/player/" + (i + 1) + "_left.png"), playerColor);
             final PImage spriteRight = recolorWhite(main.loadImage("sprites/player/" + (i + 1) + "_right.png"), playerColor);
             final Runnable deathEventListener = main::checkForWin;
-            final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, main.getSoundManager(), spriteLeft, spriteRight);
+            final Player player = new Player(playerCard.getKeybinds(), horizontalFraction, deathEventListener, spriteLeft, spriteRight);
 
             main.addKeyPressEventListener(player.getKeyPressListener());
             main.addKeyReleaseEventListener(player.getKeyReleaseListener());

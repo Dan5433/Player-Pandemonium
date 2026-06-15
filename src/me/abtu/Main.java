@@ -1,6 +1,5 @@
 package me.abtu;
 
-import me.abtu.audio.SoundManager;
 import me.abtu.game.entity.Entity;
 import me.abtu.game.entity.player.Player;
 import me.abtu.graphics.GraphicsBuffer;
@@ -10,6 +9,8 @@ import me.abtu.graphics.ui.PauseMenu;
 import me.abtu.graphics.ui.PlayerMenu;
 import me.abtu.graphics.ui.TitleScreen;
 import me.abtu.util.Color;
+import me.abtu.util.ItemManager;
+import me.abtu.util.SoundManager;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.event.KeyEvent;
@@ -50,16 +51,14 @@ public final class Main extends PApplet {
     //graphics
     private GraphicsBuffer ui, entityGraphics, pauseMenu, winScreen, matchCountdown;
 
-    //sound
-    private SoundManager soundManager;
-
 
     public void setup() {
 //        frameRate(5);
         loadFonts();
 
         initializeGraphics();
-        soundManager = new SoundManager(this);
+        SoundManager.initialize(this);
+        ItemManager.initialize(this);
     }
 
     private void initializeGraphics() {
@@ -261,9 +260,5 @@ public final class Main extends PApplet {
 
     public GameArena getArena() {
         return arena;
-    }
-
-    public SoundManager getSoundManager() {
-        return soundManager;
     }
 }

@@ -2,13 +2,13 @@ package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
-import me.abtu.audio.SoundManager;
 import me.abtu.game.entity.PhysicsEntity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.entity.player.abilities.SecondaryAbility;
 import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.util.SoundManager;
 import processing.core.*;
 import processing.sound.SoundFile;
 
@@ -40,7 +40,7 @@ public class Player extends PhysicsEntity {
     protected final SoundFile hurtSound;
 
 
-    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, SoundManager soundManager, PImage spriteLeft, PImage spriteRight) {
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, PImage spriteLeft, PImage spriteRight) {
         super(0, 0, spriteRight.width, spriteRight.height);
         left = keybinds[0];
         right = keybinds[1];
@@ -56,11 +56,11 @@ public class Player extends PhysicsEntity {
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
 
-        hurtSound = soundManager.hit;
+        hurtSound = SoundManager.getHit();
         this.deathEventListener = deathEventListener;
 
-        primaryAbility = new PrimaryAbility(soundManager.throwing);
-        secondaryAbility = new SecondaryAbility(soundManager.fireball);
+        primaryAbility = new PrimaryAbility(SoundManager.getThrowing());
+        secondaryAbility = new SecondaryAbility(SoundManager.getFireball());
 
         this.spriteLeft = spriteLeft;
         this.spriteRight = spriteRight;
@@ -269,5 +269,11 @@ public class Player extends PhysicsEntity {
     @Override
     protected boolean shouldUpdate() {
         return !isDead();
+    }
+
+    public void heal(float healAmount) {
+        health += healAmount;
+        if (health > maxHealth)
+            health = maxHealth;
     }
 }
