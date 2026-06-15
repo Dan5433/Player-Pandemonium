@@ -18,7 +18,7 @@ public class PrimaryAbility extends Ability {
             return false;
 
         final int projectileSize = 10;
-        int xOffset = xDirection * projectileSize * 2;
+        final int xOffset = xDirection * projectileSize * 2;
 
         final float projectileSpeed = main.random(439.25f, 455.75f);
         final PVector projectileVelocity = new PVector(xDirection * projectileSpeed, 0);
