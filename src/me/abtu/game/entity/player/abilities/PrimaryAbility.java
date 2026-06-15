@@ -18,11 +18,12 @@ public class PrimaryAbility extends Ability {
             return false;
 
         final int projectileSize = 10;
-        int xOffset = xDirection * projectileSize * 2;
+        final int xOffset = xDirection * projectileSize * 2;
 
-        final float projectileSpeed = 445.5f;
+        final float projectileSpeed = main.random(439.25f, 455.75f);
         final PVector projectileVelocity = new PVector(xDirection * projectileSpeed, 0);
-        final int projectileDamage = 5;
+        final PVector damageMinMax = new PVector(3f, 7f);
+        final float projectileDamage = main.random(damageMinMax.x, damageMinMax.y);
 
         Projectile projectile = new Projectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
                 projectileDamage, projectileVelocity, player);

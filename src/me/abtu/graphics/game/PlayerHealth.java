@@ -54,7 +54,8 @@ public class PlayerHealth extends GraphicsBuffer {
             //draw player health
             graphics.textAlign(PConstants.RIGHT, PConstants.CENTER);
             graphics.textSize(SMALL_TEXT_SIZE);
-            graphics.text(player.getHealth() + "/" + player.getMaxHealth(), x + statWidth - textSidePadding, overlayHeight / 2f);
+            graphics.text("%#.2f/%#.1f".formatted(player.getHealth(), player.getMaxHealth()),
+                    x + statWidth - textSidePadding, overlayHeight / 2f);
         }
     }
 }
