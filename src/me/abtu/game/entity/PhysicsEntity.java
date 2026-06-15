@@ -18,6 +18,9 @@ public abstract class PhysicsEntity extends Entity {
 
     @Override
     public void update(Main main) {
+        if (!shouldUpdate())
+            return;
+
         previousFrameX = x;
         previousFrameY = y;
 
