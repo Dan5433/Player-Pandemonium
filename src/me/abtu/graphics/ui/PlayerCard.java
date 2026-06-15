@@ -10,10 +10,7 @@ import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-import java.util.HashSet;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class PlayerCard {
     private static final String LEFT_KEY_TAG = "left";
@@ -21,8 +18,8 @@ public class PlayerCard {
     private static final String JUMP_KEY_TAG = "jump";
     private static final String PRIMARY_KEY_TAG = "primary";
     private static final String SECONDARY_KEY_TAG = "secondary";
-    private final Runnable onPressBindButton, onKeybindListenEvent;
-    private final Function<Integer, Boolean> canBindKey;
+
+    private final PlayerMenu playerMenu;
 
     private static final float CARD_MARGIN = GraphicsBuffer.REFERENCE_WIDTH / 64f;
     private static final float CARD_WIDTH = GraphicsBuffer.REFERENCE_WIDTH / 5f;
@@ -34,8 +31,7 @@ public class PlayerCard {
     private Button listeningKeybindButton;
 
     private final Button switchColorButton;
-    private final Supplier<HashSet<Integer>> availableColors;
-    private final int color;
+    private int color;
 
     public PlayerCard(int jump, int left, int right, int primary, int secondary, PlayerMenu playerMenu) {
         this.left = left;
@@ -43,9 +39,7 @@ public class PlayerCard {
         this.jump = jump;
         this.primary = primary;
         this.secondary = secondary;
-        this.onPressBindButton = playerMenu::clearListeningButtons;
-        this.canBindKey = playerMenu::canBindKey;
-        this.onKeybindListenEvent = playerMenu::updateStartButtonState;
+        this.playerMenu = playerMenu;
 
         final int xOffset = 90;
         final float buttonWidth = GraphicsBuffer.REFERENCE_WIDTH / 10f;
@@ -75,8 +69,7 @@ public class PlayerCard {
                 .tag(SECONDARY_KEY_TAG)
                 .build();
 
-        availableColors = playerMenu::getAvailableColors;
-        color = (int) availableColors.get().toArray()[0];
+        color = playerMenu.pollAvailableColor();
         final float colorButtonSize = 20f;
         this.switchColorButton = new Button.Builder(CARD_WIDTH / 2f, GraphicsBuffer.SMALL_TEXT_SIZE, colorButtonSize, colorButtonSize,
                 PConstants.CENTER, this::switchColor)
@@ -92,7 +85,10 @@ public class PlayerCard {
     }
 
     private void switchColor(Button button) {
-        HashSet<Integer> colors = availableColors.get();
+        playerMenu.addAvailableColor(color);
+        color = playerMenu.pollAvailableColor();
+
+        button.changeColors(color, color, color, color);
     }
 
     private void pressKeybindButton(Button button) {
@@ -106,7 +102,7 @@ public class PlayerCard {
             return;
         }
 
-        onPressBindButton.run();
+        playerMenu.clearListeningButtons();
 
         button.changeText("...");
         listeningKeybindButton = button;
@@ -117,7 +113,7 @@ public class PlayerCard {
             return;
 
         int keyCode = event.getKeyCode();
-        if (!canBindKey.apply(keyCode))
+        if (!playerMenu.canBindKey(keyCode))
             return;
 
         switch (listeningKeybindButton.getTag()) {
@@ -144,7 +140,7 @@ public class PlayerCard {
         }
 
         clearListeningButton();
-        onKeybindListenEvent.run();
+        playerMenu.updateStartButtonState();
     }
 
     public void draw(PGraphics graphics, float mouseX, float mouseY, boolean mousePressed, int index, int playerCount) {
@@ -258,5 +254,9 @@ public class PlayerCard {
 
     public Consumer<KeyEvent> getKeybindEventListener() {
         return keybindEventListener;
+    }
+
+    public int getColor() {
+        return color;
     }
 }

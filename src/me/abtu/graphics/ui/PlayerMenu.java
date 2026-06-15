@@ -11,8 +11,8 @@ import processing.core.PGraphics;
 import processing.core.PImage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class PlayerMenu extends GraphicsBuffer {
 
@@ -20,7 +20,7 @@ public class PlayerMenu extends GraphicsBuffer {
     private static final int MAX_PLAYERS = 4;
 
     private final ArrayList<PlayerCard> playerCards = new ArrayList<>(2);
-    private final HashSet<Integer> availableColors = new HashSet<>(List.of(Color.RED.hex()));
+    private final Queue<Integer> availableColors = new LinkedList<>();
 
     private final Button addPlayerButton, removePlayerButton, startGameButton;
 
@@ -29,6 +29,18 @@ public class PlayerMenu extends GraphicsBuffer {
     public PlayerMenu(Main main, String renderer) {
         super(main, renderer);
         this.main = main;
+
+        //fill available player colors
+        {
+            availableColors.offer(Color.RED.hex());
+            availableColors.offer(Color.ORANGE.hex());
+            availableColors.offer(Color.YELLOW.hex());
+            availableColors.offer(Color.GREEN.hex());
+            availableColors.offer(Color.CYAN.hex());
+            availableColors.offer(Color.BLUE.hex());
+            availableColors.offer(Color.MAGENTA.hex());
+            availableColors.offer(Color.VIOLET.hex());
+        }
 
         playerCards.add(new PlayerCard(KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_Q, KeyEvent.VK_E,
                 this));
@@ -77,6 +89,7 @@ public class PlayerMenu extends GraphicsBuffer {
             return;
 
         PlayerCard playerCard = playerCards.removeLast();
+        availableColors.offer(playerCard.getColor());
         main.removeKeyPressEventListener(playerCard.getKeybindEventListener());
 
         updateStartButtonState();
@@ -161,12 +174,18 @@ public class PlayerMenu extends GraphicsBuffer {
         return players;
     }
 
-    public HashSet<Integer> getAvailableColors() {
-        return availableColors;
-    }
-
     public void cleanup(Main main) {
         for (PlayerCard playerCard : playerCards)
             main.removeKeyPressEventListener(playerCard.getKeybindEventListener());
+    }
+
+    public int pollAvailableColor() {
+        if (availableColors.isEmpty())
+            return 0;
+        return availableColors.poll();
+    }
+
+    public void addAvailableColor(int color) {
+        availableColors.offer(color);
     }
 }
