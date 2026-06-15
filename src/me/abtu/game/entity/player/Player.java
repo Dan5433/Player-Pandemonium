@@ -24,7 +24,7 @@ public class Player extends PhysicsEntity {
     protected static final int COYOTE_FRAMES = 3;
     //scaled by delta time
     protected static final float ACCELERATION = 300.5f;
-    protected static final float JUMP_FORCE = 455.5f;
+    protected static final float JUMP_FORCE = 525.5f;
 
     protected final int left, right, jump, primary, secondary;
 

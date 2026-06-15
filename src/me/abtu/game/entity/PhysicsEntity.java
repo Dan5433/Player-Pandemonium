@@ -9,7 +9,7 @@ public abstract class PhysicsEntity extends Entity {
     protected float terminalVelocity = 465f;
     //scaled for delta time
     protected float friction = 6.5f;
-    protected float gravity = 1475.75f;
+    protected float gravity = 1725.75f;
 
 
     public PhysicsEntity(float x, float y, float width, float height) {
