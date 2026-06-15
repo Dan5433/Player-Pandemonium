@@ -139,6 +139,9 @@ public class Player extends PhysicsEntity {
     }
 
     private void keyPressed(KeyEvent event) {
+        if (!shouldUpdate())
+            return;
+
         int keyCode = event.getKeyCode();
 
         if (keyCode == left) {
@@ -165,6 +168,9 @@ public class Player extends PhysicsEntity {
     }
 
     private void keyReleased(KeyEvent event) {
+        if (!shouldUpdate())
+            return;
+
         int keyCode = event.getKeyCode();
 
         if (keyCode == left)
