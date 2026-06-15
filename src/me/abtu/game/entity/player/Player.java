@@ -21,10 +21,10 @@ import java.util.function.Consumer;
 
 public class Player extends PhysicsEntity {
     //unscaled
-    protected static final float JUMP_FORCE = 12.5f;
-    protected static final int COYOTE_FRAMES = 5;
-    //scaled for delta time
-    protected static final float ACCELERATION = 12.5f;
+    protected static final int COYOTE_FRAMES = 3;
+    //scaled by delta time
+    protected static final float ACCELERATION = 300.5f;
+    protected static final float JUMP_FORCE = 525.5f;
 
     protected final int left, right, jump, primary, secondary;
 
