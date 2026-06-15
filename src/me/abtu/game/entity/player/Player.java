@@ -254,8 +254,12 @@ public class Player extends PhysicsEntity {
     public void resetForRematch(float horizontalFraction) {
         health = maxHealth;
 
+        velocity = new PVector(0, 0);
+
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
+
+        lastXInput = horizontalFraction > 0.5f ? -1 : 1; //set facing direction based on x position
     }
 
     public boolean isDead() {
