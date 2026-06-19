@@ -6,24 +6,38 @@ import processing.sound.SoundFile;
 
 public abstract class Ability {
     protected final SoundFile useSound;
-    protected float cooldownSeconds;
+    protected float cooldownSecondsTimer;
+    protected float cooldownSeconds = getCooldownSeconds();
 
     public Ability(SoundFile useSound) {
         this.useSound = useSound;
     }
 
+    public void resetCooldown() {
+        cooldownSecondsTimer = getCooldownSeconds();
+    }
+
     public void tryUseAbility(Player player, Main main) {
-        if (cooldownSeconds > 0) //dont use ability if on cooldown
+        if (cooldownSecondsTimer > 0) //dont use ability if on cooldown
             return;
 
         boolean success = useAbility(player, main);
-        if (success)
-            useSound.play();
+        if (!success)
+            return;
+
+        useSound.play();
+        cooldownSecondsTimer = cooldownSeconds;
     }
 
     public abstract boolean useAbility(Player player, Main main);
 
     public void update(float deltaTimeSeconds) {
-        cooldownSeconds -= deltaTimeSeconds; //subtract seconds passed from cooldown
+        cooldownSecondsTimer -= deltaTimeSeconds; //subtract seconds passed from cooldown
     }
+
+    public void alterCooldown(float multiplier) {
+        cooldownSeconds *= multiplier;
+    }
+
+    protected abstract float getCooldownSeconds();
 }

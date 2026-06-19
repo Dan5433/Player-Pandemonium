@@ -226,6 +226,9 @@ public class Player extends PlatformerEntity {
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
 
         lastXInput = horizontalFraction > 0.5f ? -1 : 1; //set facing direction based on x position
+
+        primaryAbility.resetCooldown();
+        secondaryAbility.resetCooldown();
     }
 
     public boolean isDead() {
@@ -241,5 +244,9 @@ public class Player extends PlatformerEntity {
         health += healAmount;
         if (health > maxHealth)
             health = maxHealth;
+    }
+
+    public Ability[] getAbilities() {
+        return new Ability[]{primaryAbility, secondaryAbility};
     }
 }

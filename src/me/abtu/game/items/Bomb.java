@@ -3,15 +3,17 @@ package me.abtu.game.items;
 import me.abtu.Main;
 import me.abtu.game.entity.player.Player;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Bomb extends Item {
     private static final float EXPLOSION_RADIUS = 100f; //in pixels
 
     private float maxDamage;
 
-    public Bomb(PApplet app) {
-        super(app.loadImage("sprites/items/bomb.png"));
+    public Bomb(PImage sprite) {
+        super(sprite);
     }
+
 
     @Override
     protected void updateInternal(Main main) {

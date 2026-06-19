@@ -7,6 +7,8 @@ import processing.core.PVector;
 import processing.sound.SoundFile;
 
 public class SecondaryAbility extends Ability {
+    private static final float COOLDOWN_SECONDS = 1.25f;
+
     public SecondaryAbility(SoundFile useSound) {
         super(useSound);
     }
@@ -30,8 +32,11 @@ public class SecondaryAbility extends Ability {
         PhysicsProjectile projectile = new PhysicsProjectile(player.getX() + xOffset, player.getY(), projectileSize, projectileSize,
                 projectileDamage, projectileVelocity, player);
         main.addEntity(projectile);
-
-        cooldownSeconds = 1.25f;
         return true;
+    }
+
+    @Override
+    protected float getCooldownSeconds() {
+        return COOLDOWN_SECONDS;
     }
 }
