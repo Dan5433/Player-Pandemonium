@@ -12,6 +12,7 @@ public final class ItemManager {
                 new Bomb(app.loadImage("sprites/items/bomb.png")),
                 new LowerCooldowns(app.loadImage("sprites/items/bullets.png")),
                 new DoubleJump(app.loadImage("sprites/items/cloud_up.png")),
+                new BonusMaxHealth(app.loadImage("sprites/items/heart_plus.png")),
         };
     }
 

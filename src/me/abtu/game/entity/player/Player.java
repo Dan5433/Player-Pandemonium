@@ -266,4 +266,8 @@ public class Player extends PlatformerEntity {
     public void addDoubleJump() {
         doubleJumpsTotal++;
     }
+
+    public void addMaxHealth(int bonus) {
+        maxHealth += bonus;
+    }
 }
