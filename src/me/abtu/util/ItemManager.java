@@ -1,5 +1,6 @@
 package me.abtu.util;
 
+import me.abtu.game.items.Bomb;
 import me.abtu.game.items.Heal;
 import me.abtu.game.items.Item;
 import processing.core.PApplet;
@@ -9,7 +10,8 @@ public final class ItemManager {
 
     public static void initialize(PApplet app) {
         items = new Item[]{
-                new Heal(0, 0, app),
+                new Heal(app),
+                new Bomb(app),
         };
     }
 

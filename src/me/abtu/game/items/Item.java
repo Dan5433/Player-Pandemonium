@@ -11,8 +11,8 @@ import processing.core.PImage;
 public abstract class Item extends PlatformerEntity implements Cloneable {
     private final PImage sprite;
 
-    public Item(float x, float y, PImage sprite) {
-        super(x, y, sprite.width, sprite.height);
+    public Item(PImage sprite) {
+        super(0, 0, sprite.width, sprite.height);
         this.sprite = sprite;
 
         terminalVelocity = 100f;
@@ -39,7 +39,7 @@ public abstract class Item extends PlatformerEntity implements Cloneable {
                 continue;
 
             if (collidedWith(player)) {
-                useItem(player);
+                useItem(player, main);
                 main.removeEntity(this);
                 return;
             }
@@ -54,7 +54,7 @@ public abstract class Item extends PlatformerEntity implements Cloneable {
         return clone;
     }
 
-    public abstract void useItem(Player user);
+    public abstract void useItem(Player user, Main main);
 
     protected abstract void setInstantiatedProperties(PApplet app);
 
