@@ -9,6 +9,11 @@ import me.abtu.util.ItemManager;
 import processing.core.PGraphics;
 
 public class GameArena extends GraphicsBuffer {
+    //3 to 5 second cooldown on 2 player, 2 to 3.33 second cooldown on 3p, 1.5 to 2.5 second cooldown on 4p
+    private static final float MIN_ITEM_SPAWN_COOLDOWN = 6f;
+    private static final float MAX_ITEM_SPAWN_COOLDOWN = 10f;
+
+
     protected Platform[] platforms;
 
     private float countdownSeconds = 3f;
@@ -67,7 +72,7 @@ public class GameArena extends GraphicsBuffer {
 
     public void setItemSpawnCooldown(Main main) {
         int playerCount = main.getPlayers().length;
-        itemSpawnCooldown = main.random(6f / playerCount, 10f / playerCount); //3 to 5 second cooldown on 2 player
+        itemSpawnCooldown = main.random(MIN_ITEM_SPAWN_COOLDOWN / playerCount, MAX_ITEM_SPAWN_COOLDOWN / playerCount);
     }
 
     public float updateCountdown(float deltaTimeSeconds) {

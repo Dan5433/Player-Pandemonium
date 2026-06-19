@@ -14,7 +14,7 @@ public abstract class Ability {
     }
 
     public void resetCooldown() {
-        cooldownSecondsTimer = getCooldownSeconds();
+        cooldownSeconds = getCooldownSeconds();
     }
 
     public void tryUseAbility(Player player, Main main) {

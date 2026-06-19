@@ -15,6 +15,7 @@ import java.util.function.Consumer;
 
 
 public class Player extends PlatformerEntity {
+    private static final float MAX_HEALTH = 100f;
     //unscaled
     protected static final int COYOTE_FRAMES = 3;
     //scaled by delta time
@@ -35,7 +36,7 @@ public class Player extends PlatformerEntity {
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
     protected boolean leftKeyDown, rightKeyDown, jumpKeyDown, primaryKeyDown, secondaryKeyDown;
 
-    protected float maxHealth = 100f;
+    protected float maxHealth = MAX_HEALTH;
     protected float health = maxHealth;
     protected final Runnable deathEventListener;
     protected final SoundFile hurtSound;
@@ -231,15 +232,20 @@ public class Player extends PlatformerEntity {
     }
 
     public void resetForRematch(float horizontalFraction) {
+        maxHealth = MAX_HEALTH; //reset bonus max health
         health = maxHealth;
 
         velocity = new PVector(0, 0);
 
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
-
         lastXInput = horizontalFraction > 0.5f ? -1 : 1; //set facing direction based on x position
 
+        //reset double jumps
+        doubleJumpsTotal = 0;
+        doubleJumpsCounter = 0;
+
+        //reset lower cooldowns items
         primaryAbility.resetCooldown();
         secondaryAbility.resetCooldown();
     }
