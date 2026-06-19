@@ -26,6 +26,8 @@ public class Player extends PlatformerEntity {
 
     protected boolean isOnPlatform = false;
     protected int coyoteFrames = COYOTE_FRAMES; //small numbers of frames to let players jump slightly after they are already in air
+    protected int doubleJumpsTotal; //how many times player can jump in air
+    protected int doubleJumpsCounter;
 
     protected int xInput, lastXInput; //last x input is the last non-zero input; determines which way player is facing
     protected final Ability primaryAbility, secondaryAbility;
@@ -84,6 +86,10 @@ public class Player extends PlatformerEntity {
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
 
+        //update double jumps
+        if (!isInAir())
+            doubleJumpsCounter = doubleJumpsTotal;
+
         final float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         updateAbilities(main, deltaTimeSeconds);
     }
@@ -128,8 +134,12 @@ public class Player extends PlatformerEntity {
         }
 
         if (keyCode == jump) {
+            if (isInAir() && doubleJumpsCounter > 0)
+                jump();
+
             jumpKeyDown = true;
         }
+
 
         if (keyCode == primary)
             primaryKeyDown = true;
@@ -171,6 +181,9 @@ public class Player extends PlatformerEntity {
     private void jump() {
         velocity.y = -JUMP_FORCE;
         coyoteFrames = 0; //reset coyote time to prevent extra jumps
+
+        if (isInAir())
+            doubleJumpsCounter--;
     }
 
     public void cleanup(Main main) {
@@ -248,5 +261,9 @@ public class Player extends PlatformerEntity {
 
     public Ability[] getAbilities() {
         return new Ability[]{primaryAbility, secondaryAbility};
+    }
+
+    public void addDoubleJump() {
+        doubleJumpsTotal++;
     }
 }
