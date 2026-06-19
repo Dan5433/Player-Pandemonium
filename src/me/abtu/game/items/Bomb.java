@@ -6,7 +6,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Bomb extends Item {
-    private static final float EXPLOSION_RADIUS = 100f; //in pixels
+    private static final float EXPLOSION_RADIUS = 130f; //in pixels
 
     private float maxDamage;
 
