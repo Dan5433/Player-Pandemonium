@@ -72,7 +72,7 @@ public final class Main extends PApplet {
         background(Color.WHITE.hex());
 
         if (state == State.GAME)
-            gameUpdate();
+            gameUpdate(deltaTimeSeconds);
 
         if (state == State.COUNTDOWN) {
             float countdown = arena.updateCountdown(deltaTimeSeconds);
@@ -118,9 +118,11 @@ public final class Main extends PApplet {
             listener.accept((com.jogamp.newt.event.KeyEvent) event.getNative());
     }
 
-    private void gameUpdate() {
+    private void gameUpdate(float deltaTimeSeconds) {
         for (Entity entity : new ArrayList<>(entities))
             entity.update(this);
+
+        arena.updateItemSpawning(deltaTimeSeconds, this);
     }
 
     @SuppressWarnings("unused")
@@ -141,8 +143,12 @@ public final class Main extends PApplet {
 
         playerMenu.cleanup(this);
 
+
         ui = new PlayerHealth(this, JAVA2D);
+
         arena = new GameArena(this, JAVA2D);
+        arena.setItemSpawnCooldown(this);
+
         entityGraphics = new EntityGraphics(this, JAVA2D);
         matchCountdown = new MatchCountdown(this, JAVA2D);
         state = State.COUNTDOWN;

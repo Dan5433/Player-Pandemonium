@@ -2,14 +2,17 @@ package me.abtu.graphics.game;
 
 import me.abtu.Main;
 import me.abtu.game.environment.Platform;
+import me.abtu.game.items.Item;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.util.Color;
+import me.abtu.util.ItemManager;
 import processing.core.PGraphics;
 
 public class GameArena extends GraphicsBuffer {
     protected Platform[] platforms;
 
     private float countdownSeconds = 3f;
+    private float itemSpawnCooldown;
 
     public GameArena(Main main, String renderer) {
         super(main, renderer);
@@ -42,6 +45,29 @@ public class GameArena extends GraphicsBuffer {
     protected void drawBuffer(Main main, PGraphics graphics, float mouseX, float mouseY) {
         for (Platform platform : platforms)
             platform.draw(graphics);
+    }
+
+    public void updateItemSpawning(float deltaTimeSeconds, Main main) {
+        itemSpawnCooldown -= deltaTimeSeconds;
+        if (itemSpawnCooldown > 0)
+            return;
+
+        //spawn item if not on cooldown
+        Item[] itemPool = ItemManager.getItems();
+        int randomIndex = (int) main.random(itemPool.length);
+        Item prefab = itemPool[randomIndex];
+
+        float x = main.random(prefab.getWidth() / 2f, main.width - prefab.getWidth() / 2f);
+        float y = prefab.getHeight() / 2f;
+        Item item = prefab.instantiate(x, y, main);
+
+        main.addEntity(item);
+        setItemSpawnCooldown(main);
+    }
+
+    public void setItemSpawnCooldown(Main main) {
+        int playerCount = main.getPlayers().length;
+        itemSpawnCooldown = main.random(6f / playerCount, 10f / playerCount); //3 to 5 second cooldown on 2 player
     }
 
     public float updateCountdown(float deltaTimeSeconds) {

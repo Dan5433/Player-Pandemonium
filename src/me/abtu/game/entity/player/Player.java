@@ -227,14 +227,6 @@ public class Player extends PhysicsEntity {
         return lastXInput;
     }
 
-    public PVector getTopLeftEdge() {
-        return new PVector(x - width / 2f, y - height / 2f);
-    }
-
-    public PVector getBottomRightEdge() {
-        return new PVector(x + width / 2f, y + height / 2f);
-    }
-
     public void dealDamage(float damage) {
         health -= damage;
         if (health <= 0)

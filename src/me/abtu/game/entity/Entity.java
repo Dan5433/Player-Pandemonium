@@ -4,7 +4,7 @@ import me.abtu.Main;
 import processing.core.PGraphics;
 import processing.core.PVector;
 
-public abstract class Entity {
+public abstract class Entity implements Cloneable {
     protected final float width;
     protected final float height;
 
@@ -82,5 +82,26 @@ public abstract class Entity {
         final boolean currentlyOverlapping = currentlyOverlappingX && currentlyOverlappingY;
 
         return (withinPlayerY || hitTop || hitBottom) && (withinPlayerX || hitLeft || hitRight) || currentlyOverlapping;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    @Override
+    public Entity clone() {
+        try {
+            Entity clone = (Entity) super.clone();
+            clone.velocity = new PVector(velocity.x, velocity.y);
+            clone.x = x;
+            clone.y = y;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
