@@ -57,7 +57,8 @@ public class GameArena extends GraphicsBuffer {
         int randomIndex = (int) main.random(itemPool.length);
         Item prefab = itemPool[randomIndex];
 
-        float x = main.random(prefab.getWidth() / 2f, main.width - prefab.getWidth() / 2f);
+        float x = main.random(prefab.getWidth() / 2f, REFERENCE_WIDTH - prefab.getWidth() / 2f);
+        System.out.println(x);
         float y = prefab.getHeight() / 2f;
         Item item = prefab.instantiate(x, y, main);
 

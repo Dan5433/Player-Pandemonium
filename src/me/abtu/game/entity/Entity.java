@@ -97,8 +97,6 @@ public abstract class Entity implements Cloneable {
         try {
             Entity clone = (Entity) super.clone();
             clone.velocity = new PVector(velocity.x, velocity.y);
-            clone.x = x;
-            clone.y = y;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();

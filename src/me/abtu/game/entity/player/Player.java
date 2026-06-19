@@ -2,11 +2,10 @@ package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
-import me.abtu.game.entity.PhysicsEntity;
+import me.abtu.game.entity.PlatformerEntity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.entity.player.abilities.SecondaryAbility;
-import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
 import me.abtu.util.SoundManager;
 import processing.core.*;
@@ -15,7 +14,7 @@ import processing.sound.SoundFile;
 import java.util.function.Consumer;
 
 
-public class Player extends PhysicsEntity {
+public class Player extends PlatformerEntity {
     //unscaled
     protected static final int COYOTE_FRAMES = 3;
     //scaled by delta time
@@ -78,11 +77,7 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
-        //dont let players go off screen
-        x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
-        y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
-
-        platformCheck(main.getArena().getPlatforms());
+        super.updateInternal(main);
 
         //update coyote time
         coyoteFrames--;
@@ -91,27 +86,6 @@ public class Player extends PhysicsEntity {
 
         final float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         updateAbilities(main, deltaTimeSeconds);
-    }
-
-    private void platformCheck(Platform[] platforms) {
-        final float leftEdge = x - width / 2f;
-        final float rightEdge = x + width / 2f;
-        final float bottomEdge = y + height / 2f;
-        final float previousFrameBottomEdge = previousFrameY + height / 2f;
-
-        //check if player should be on a platform if player was above it last frame and is now at or below it
-        for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(leftEdge, rightEdge,
-                    bottomEdge, previousFrameBottomEdge, velocity.y)) {
-                isOnPlatform = true;
-
-                //set y to platform top
-                y = platform.getTopSurfaceY() - height / 2f;
-                return;
-            }
-        }
-
-        isOnPlatform = false;
     }
 
     private void updateAbilities(Main main, float deltaTimeSeconds) {
@@ -207,7 +181,7 @@ public class Player extends PhysicsEntity {
 
     @Override
     protected boolean isInAir() {
-        return y < GraphicsBuffer.REFERENCE_HEIGHT - height / 2f && !isOnPlatform && coyoteFrames <= 0;
+        return super.isInAir() && coyoteFrames <= 0;
     }
 
     @Override
