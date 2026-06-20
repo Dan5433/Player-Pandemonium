@@ -31,7 +31,7 @@ public class TitleScreen extends GraphicsBuffer {
         playButton.update(mouseX, mouseY, main.mousePressed);
         quitButton.update(mouseX, mouseY, main.mousePressed);
 
-        final int padding = 2;
+        final float margin = 1f;
         graphics.fill(0);
 
         graphics.textFont(main.getTitleFont());
@@ -47,9 +47,9 @@ public class TitleScreen extends GraphicsBuffer {
 
         graphics.textSize(SMALL_TEXT_SIZE);
         graphics.textAlign(PConstants.LEFT, PConstants.BOTTOM);
-        graphics.text(AppConfig.VERSION, padding, REFERENCE_HEIGHT - padding);
+        graphics.text("v" + AppConfig.VERSION, margin * 3, REFERENCE_HEIGHT - margin);
 
         graphics.textAlign(PConstants.RIGHT, PConstants.BOTTOM);
-        graphics.text(AppConfig.COPYRIGHT, REFERENCE_WIDTH - padding, REFERENCE_HEIGHT - padding);
+        graphics.text(AppConfig.COPYRIGHT, REFERENCE_WIDTH - margin * 3, REFERENCE_HEIGHT - margin);
     }
 }
