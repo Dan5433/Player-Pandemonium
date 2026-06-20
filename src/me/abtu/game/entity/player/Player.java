@@ -31,6 +31,7 @@ public class Player extends PlatformerEntity {
     protected int doubleJumpsCounter;
 
     protected int xInput, lastXInput; //last x input is the last non-zero input; determines which way player is facing
+    protected float acceleration = ACCELERATION;
     protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
@@ -110,7 +111,7 @@ public class Player extends PlatformerEntity {
     protected void updateVelocity(float deltaTimeSeconds) {
         //move player on input
         if (!shouldApplyFriction())
-            velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
+            velocity.x += xInput * acceleration * deltaTimeSeconds;
 
         super.updateVelocity(deltaTimeSeconds);
 
@@ -236,6 +237,9 @@ public class Player extends PlatformerEntity {
         health = maxHealth;
 
         velocity = new PVector(0, 0);
+        //reset speed item effects
+        acceleration = ACCELERATION;
+        maxHorizontalVelocity = MAX_HORIZONTAL_VELOCITY;
 
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
@@ -275,5 +279,10 @@ public class Player extends PlatformerEntity {
 
     public void addMaxHealth(int bonus) {
         maxHealth += bonus;
+    }
+
+    public void multiplySpeed(float accelerationMultiplier, float maxSpeedMultiplier) {
+        acceleration *= accelerationMultiplier;
+        maxHorizontalVelocity *= maxSpeedMultiplier;
     }
 }

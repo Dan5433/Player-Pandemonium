@@ -16,7 +16,7 @@ public class LowerCooldowns extends Item {
     @Override
     public void useItem(Player user, Main main) {
         for (Ability ability : user.getAbilities()) {
-            ability.alterCooldown(cooldownMultiplier);
+            ability.multiplyCooldown(cooldownMultiplier);
         }
     }
 

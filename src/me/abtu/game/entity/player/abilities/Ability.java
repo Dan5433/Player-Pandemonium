@@ -35,7 +35,7 @@ public abstract class Ability {
         cooldownSecondsTimer -= deltaTimeSeconds; //subtract seconds passed from cooldown
     }
 
-    public void alterCooldown(float multiplier) {
+    public void multiplyCooldown(float multiplier) {
         cooldownSeconds *= multiplier;
     }
 

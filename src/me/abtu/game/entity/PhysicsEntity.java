@@ -4,8 +4,10 @@ import me.abtu.Main;
 import me.abtu.graphics.GraphicsBuffer;
 
 public abstract class PhysicsEntity extends Entity {
+    protected static final float MAX_HORIZONTAL_VELOCITY = 325f;
+
     //unscaled
-    protected float maxHorizontalVelocity = 325f;
+    protected float maxHorizontalVelocity = MAX_HORIZONTAL_VELOCITY;
     protected float terminalVelocity = 465f;
     //scaled for delta time
     protected float friction = 6.5f;
