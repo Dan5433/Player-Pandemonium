@@ -35,6 +35,9 @@ public class Bomb extends Item {
 
     private void dealAreaDamage(Player user, Main main) {
         for (Player player : main.getPlayers()) {
+            if (player.isDead()) //skip dead players
+                continue;
+
             if (player == user) //skip person who touched it and got max damage
                 continue;
 
