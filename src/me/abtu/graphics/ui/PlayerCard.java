@@ -113,6 +113,10 @@ public class PlayerCard {
             return;
 
         int keyCode = event.getKeyCode();
+        if (isSameKeybind(keyCode)) {
+            clearListeningButton();
+            return;
+        }
         if (!playerMenu.canBindKey(keyCode))
             return;
 
@@ -250,6 +254,32 @@ public class PlayerCard {
             case PRIMARY_KEY_TAG -> primaryKeybindButton.changeText(getPrimaryKeyText());
             case SECONDARY_KEY_TAG -> secondaryKeybindButton.changeText(getSecondaryKeyText());
         }
+    }
+
+    private boolean isSameKeybind(int keyCode) {
+        switch (listeningKeybindButton.getTag()) {
+            case LEFT_KEY_TAG -> {
+                if (left == keyCode)
+                    return true;
+            }
+            case RIGHT_KEY_TAG -> {
+                if (right == keyCode)
+                    return true;
+            }
+            case JUMP_KEY_TAG -> {
+                if (jump == keyCode)
+                    return true;
+            }
+            case PRIMARY_KEY_TAG -> {
+                if (primary == keyCode)
+                    return true;
+            }
+            case SECONDARY_KEY_TAG -> {
+                if (secondary == keyCode)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public Consumer<KeyEvent> getKeybindEventListener() {
