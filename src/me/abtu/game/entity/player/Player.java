@@ -71,7 +71,7 @@ public class Player extends PlatformerEntity {
     }
 
     public void draw(PGraphics graphics) {
-        if (isDead())
+        if (!shouldUpdate())
             return;
 
         PImage sprite = lastXInput > 0 ? spriteRight : spriteLeft; //flips image based on facing direction
@@ -177,10 +177,14 @@ public class Player extends PlatformerEntity {
 
         //set input to respective direction if another key is down
         //ensure smooth movement when both keys are pressed by prioritizing last one held
-        if (leftKeyDown)
+        if (leftKeyDown) {
             xInput = -1;
-        if (rightKeyDown)
+            lastXInput = xInput;
+        }
+        if (rightKeyDown) {
             xInput = 1;
+            lastXInput = xInput;
+        }
 
         if (!leftKeyDown && !rightKeyDown)
             xInput = 0;
