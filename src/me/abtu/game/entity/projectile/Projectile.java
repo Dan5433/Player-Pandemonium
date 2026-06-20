@@ -44,14 +44,6 @@ public class Projectile extends PhysicsEntity {
     }
 
     private void dealDamageToPlayers(Player[] players, Main main) {
-        final float topEdge = y - height / 2f;
-        final float bottomEdge = y + height / 2f;
-        final float leftEdge = x - width / 2f;
-        final float rightEdge = x + width / 2f;
-        final float previousFrameLeftEdge = previousFrameX - width / 2f;
-        final float previousFrameRightEdge = previousFrameX + width / 2f;
-        final float previousFrameTopEdge = previousFrameY - height / 2f;
-        final float previousFrameBottomEdge = previousFrameY + height / 2f;
         for (Player player : players) {
             if (player.isDead()) //skip dead players
                 continue;
@@ -59,21 +51,7 @@ public class Projectile extends PhysicsEntity {
             if (player == owner) //prevent player who shot projectile being hit
                 continue;
 
-            PVector playerTopLeft = player.getTopLeftEdge();
-            PVector playerBottomRight = player.getBottomRightEdge();
-            final float playerPreviousX = player.getPreviousFrameX();
-            final float playerPreviousY = player.getPreviousFrameY();
-
-            //check hit by comparing positions of previous and current frame
-            //counts as hit if projectile went through player
-            //prevents projectile from phasing through player on large game steps
-            final boolean withinPlayerY = bottomEdge >= playerTopLeft.y && topEdge <= playerBottomRight.y;
-            final boolean hitPlayerTop = bottomEdge >= playerTopLeft.y && previousFrameTopEdge <= playerPreviousY;
-            final boolean hitPlayerBottom = topEdge <= playerBottomRight.y && previousFrameBottomEdge >= playerPreviousY;
-            final boolean hitPlayerLeft = rightEdge >= playerTopLeft.x && previousFrameLeftEdge <= playerPreviousX;
-            final boolean hitPlayerRight = leftEdge <= playerBottomRight.x && previousFrameRightEdge >= playerPreviousX;
-
-            if ((withinPlayerY || hitPlayerTop || hitPlayerBottom) && (hitPlayerLeft || hitPlayerRight)) {
+            if (collidedWith(player)) {
                 player.dealDamage(damage);
                 main.removeEntity(this);
                 return;

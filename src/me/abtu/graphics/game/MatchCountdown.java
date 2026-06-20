@@ -11,7 +11,7 @@ public class MatchCountdown extends GraphicsBuffer {
     public MatchCountdown(Main main, String renderer) {
         super(main, renderer);
 
-        backgroundColor = 0xAA000000;
+        backgroundColor = 0x70000000;
     }
 
     @Override

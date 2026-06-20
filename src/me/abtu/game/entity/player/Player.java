@@ -2,20 +2,20 @@ package me.abtu.game.entity.player;
 
 import com.jogamp.newt.event.KeyEvent;
 import me.abtu.Main;
-import me.abtu.audio.SoundManager;
-import me.abtu.game.entity.PhysicsEntity;
+import me.abtu.game.entity.PlatformerEntity;
 import me.abtu.game.entity.player.abilities.Ability;
 import me.abtu.game.entity.player.abilities.PrimaryAbility;
 import me.abtu.game.entity.player.abilities.SecondaryAbility;
-import me.abtu.game.environment.Platform;
 import me.abtu.graphics.GraphicsBuffer;
+import me.abtu.util.SoundManager;
 import processing.core.*;
 import processing.sound.SoundFile;
 
 import java.util.function.Consumer;
 
 
-public class Player extends PhysicsEntity {
+public class Player extends PlatformerEntity {
+    private static final float MAX_HEALTH = 100f;
     //unscaled
     protected static final int COYOTE_FRAMES = 3;
     //scaled by delta time
@@ -27,20 +27,23 @@ public class Player extends PhysicsEntity {
 
     protected boolean isOnPlatform = false;
     protected int coyoteFrames = COYOTE_FRAMES; //small numbers of frames to let players jump slightly after they are already in air
+    protected int doubleJumpsTotal; //how many times player can jump in air
+    protected int doubleJumpsCounter;
 
     protected int xInput, lastXInput; //last x input is the last non-zero input; determines which way player is facing
+    protected float acceleration = ACCELERATION;
     protected final Ability primaryAbility, secondaryAbility;
 
     protected Consumer<KeyEvent> keyPressListener, keyReleaseListener;
     protected boolean leftKeyDown, rightKeyDown, jumpKeyDown, primaryKeyDown, secondaryKeyDown;
 
-    protected float maxHealth = 100f;
+    protected float maxHealth = MAX_HEALTH;
     protected float health = maxHealth;
     protected final Runnable deathEventListener;
     protected final SoundFile hurtSound;
 
 
-    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, SoundManager soundManager, PImage spriteLeft, PImage spriteRight) {
+    public Player(int[] keybinds, float horizontalFraction, Runnable deathEventListener, PImage spriteLeft, PImage spriteRight) {
         super(0, 0, spriteRight.width, spriteRight.height);
         left = keybinds[0];
         right = keybinds[1];
@@ -56,11 +59,11 @@ public class Player extends PhysicsEntity {
         keyPressListener = this::keyPressed;
         keyReleaseListener = this::keyReleased;
 
-        hurtSound = soundManager.hit;
+        hurtSound = SoundManager.getHit();
         this.deathEventListener = deathEventListener;
 
-        primaryAbility = new PrimaryAbility(soundManager.throwing);
-        secondaryAbility = new SecondaryAbility(soundManager.fireball);
+        primaryAbility = new PrimaryAbility(SoundManager.getThrowing());
+        secondaryAbility = new SecondaryAbility(SoundManager.getFireball());
 
         this.spriteLeft = spriteLeft;
         this.spriteRight = spriteRight;
@@ -78,40 +81,19 @@ public class Player extends PhysicsEntity {
 
     @Override
     public void updateInternal(Main main) {
-        //dont let players go off screen
-        x = Math.clamp(x, width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f);
-        y = Math.clamp(y, -height / 2f, GraphicsBuffer.REFERENCE_HEIGHT - height / 2f);
-
-        platformCheck(main.getArena().getPlatforms());
+        super.updateInternal(main);
 
         //update coyote time
         coyoteFrames--;
         if (isOnPlatform)
             coyoteFrames = COYOTE_FRAMES;
 
+        //update double jumps
+        if (!isInAir())
+            doubleJumpsCounter = doubleJumpsTotal;
+
         final float deltaTimeSeconds = main.getDeltaTime() / 1000f;
         updateAbilities(main, deltaTimeSeconds);
-    }
-
-    private void platformCheck(Platform[] platforms) {
-        final float leftEdge = x - width / 2f;
-        final float rightEdge = x + width / 2f;
-        final float bottomEdge = y + height / 2f;
-        final float previousFrameBottomEdge = previousFrameY + height / 2f;
-
-        //check if player should be on a platform if player was above it last frame and is now at or below it
-        for (Platform platform : platforms) {
-            if (platform.canObjectStandOn(leftEdge, rightEdge,
-                    bottomEdge, previousFrameBottomEdge, velocity.y)) {
-                isOnPlatform = true;
-
-                //set y to platform top
-                y = platform.getTopSurfaceY() - height / 2f;
-                return;
-            }
-        }
-
-        isOnPlatform = false;
     }
 
     private void updateAbilities(Main main, float deltaTimeSeconds) {
@@ -129,7 +111,7 @@ public class Player extends PhysicsEntity {
     protected void updateVelocity(float deltaTimeSeconds) {
         //move player on input
         if (!shouldApplyFriction())
-            velocity.x += xInput * ACCELERATION * deltaTimeSeconds;
+            velocity.x += xInput * acceleration * deltaTimeSeconds;
 
         super.updateVelocity(deltaTimeSeconds);
 
@@ -157,8 +139,12 @@ public class Player extends PhysicsEntity {
         }
 
         if (keyCode == jump) {
+            if (isInAir() && doubleJumpsCounter > 0)
+                jump();
+
             jumpKeyDown = true;
         }
+
 
         if (keyCode == primary)
             primaryKeyDown = true;
@@ -203,6 +189,9 @@ public class Player extends PhysicsEntity {
     private void jump() {
         velocity.y = -JUMP_FORCE;
         coyoteFrames = 0; //reset coyote time to prevent extra jumps
+
+        if (isInAir())
+            doubleJumpsCounter--;
     }
 
     public void cleanup(Main main) {
@@ -213,7 +202,7 @@ public class Player extends PhysicsEntity {
 
     @Override
     protected boolean isInAir() {
-        return y < GraphicsBuffer.REFERENCE_HEIGHT - height / 2f && !isOnPlatform && coyoteFrames <= 0;
+        return super.isInAir() && coyoteFrames <= 0;
     }
 
     @Override
@@ -233,14 +222,6 @@ public class Player extends PhysicsEntity {
         return lastXInput;
     }
 
-    public PVector getTopLeftEdge() {
-        return new PVector(x - width / 2f, y - height / 2f);
-    }
-
-    public PVector getBottomRightEdge() {
-        return new PVector(x + width / 2f, y + height / 2f);
-    }
-
     public void dealDamage(float damage) {
         health -= damage;
         if (health <= 0)
@@ -258,14 +239,25 @@ public class Player extends PhysicsEntity {
     }
 
     public void resetForRematch(float horizontalFraction) {
+        maxHealth = MAX_HEALTH; //reset bonus max health
         health = maxHealth;
 
         velocity = new PVector(0, 0);
+        //reset speed item effects
+        acceleration = ACCELERATION;
+        maxHorizontalVelocity = MAX_HORIZONTAL_VELOCITY;
 
         x = PApplet.lerp(width / 2f, GraphicsBuffer.REFERENCE_WIDTH - width / 2f, horizontalFraction);
         y = GraphicsBuffer.REFERENCE_HEIGHT - height / 2f;
-
         lastXInput = horizontalFraction > 0.5f ? -1 : 1; //set facing direction based on x position
+
+        //reset double jumps
+        doubleJumpsTotal = 0;
+        doubleJumpsCounter = 0;
+
+        //reset lower cooldowns items
+        primaryAbility.resetCooldown();
+        secondaryAbility.resetCooldown();
     }
 
     public boolean isDead() {
@@ -275,5 +267,28 @@ public class Player extends PhysicsEntity {
     @Override
     protected boolean shouldUpdate() {
         return !isDead();
+    }
+
+    public void heal(float healAmount) {
+        health += healAmount;
+        if (health > maxHealth)
+            health = maxHealth;
+    }
+
+    public Ability[] getAbilities() {
+        return new Ability[]{primaryAbility, secondaryAbility};
+    }
+
+    public void addDoubleJump() {
+        doubleJumpsTotal++;
+    }
+
+    public void addMaxHealth(int bonus) {
+        maxHealth += bonus;
+    }
+
+    public void multiplySpeed(float accelerationMultiplier, float maxSpeedMultiplier) {
+        acceleration *= accelerationMultiplier;
+        maxHorizontalVelocity *= maxSpeedMultiplier;
     }
 }
