@@ -145,6 +145,15 @@ public class PlayerMenu extends GraphicsBuffer {
         if (keyCode == KeyEvent.VK_ESCAPE)
             return false;
 
+        if (keyCode == KeyEvent.VK_META || keyCode == KeyEvent.VK_WINDOWS)
+            return false;
+
+        if (keyCode == KeyEvent.VK_CAPS_LOCK)
+            return false;
+
+        if (keyCode == KeyEvent.VK_NUM_LOCK)
+            return false;
+
         for (PlayerCard playerCard : playerCards) {
             int[] keybinds = playerCard.getKeybinds();
             for (int keybind : keybinds) {
